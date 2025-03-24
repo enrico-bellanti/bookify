@@ -1,0 +1,58 @@
+# Build artifacts
+bin/
+obj/
+
+# Visual Studio files
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Rider files
+.idea/
+
+# Dependencies
+packages/
+node_modules/
+
+# Logs and debug
+*.log
+logs/
+*.nlog
+*.trace
+*.swp
+
+# Configuration files (adjust if needed)
+appsettings.Development.json
+appsettings.Local.json
+secrets.json
+
+# Database and migrations
+*.mdf
+*.ldf
+Migrations/
+
+# ASP.NET temporary files
+*.pidb
+*.psess
+
+# NuGet
+project.lock.json
+*.nupkg
+.nuget/
+
+# Resharper files
+_ReSharper.Caches/
+
+# Entity Framework
+*.db
+*.sqlite
+*.db-shm
+*.db-wal
+
+# MacOS and Linux
+.DS_Store
+*.swp
+*.swo
+Thumbs.db
