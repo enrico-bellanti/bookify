@@ -1,7 +1,7 @@
 services:
   bookify:
     build: .
-    dockerfile: Dockerfile.server
+    dockerfile: Dockerfile
     depends_on:
       migrations:
         condition: service_completed_successfully
