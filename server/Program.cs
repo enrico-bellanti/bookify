@@ -13,9 +13,14 @@ builder.Configuration.AddEnvironmentVariables();
 
 // Configurazione DbContext
 builder.Services.AddDbContext<BookifyDbContext>(options =>
-    options.UseSqlServer(
-        builder.Configuration["ConnectionStrings:DefaultConnection"]
-    ));
+{
+    var connectionString = Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection")
+    ?? builder.Configuration.GetConnectionString("DefaultConnection");
+    options.UseSqlServer(connectionString);
+});
+    // options.UseSqlServer(
+    //     builder.Configuration["ConnectionStrings:DefaultConnection"]
+    // ));
     // options.UseSqlServer(
     //     builder.Configuration.GetConnectionString("DefaultConnection") ??
     //     Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection")
