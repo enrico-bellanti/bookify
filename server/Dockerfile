@@ -2,6 +2,7 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /source
 COPY . .
+RUN ls -la  # <-- Aggiungi questo per debug, vedrai i file copiati
 RUN dotnet restore "./Bookify.csproj" --disable-parallel
 RUN dotnet publish "./Bookify.csproj" -c release -o /app --no-restore
 
