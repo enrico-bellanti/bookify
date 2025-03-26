@@ -10,7 +10,7 @@ ENV KEYCLOAK_ADMIN_PASSWORD=admin
 # ENV KC_DB_PASSWORD=keycloak
 ENV KC_DB=railway
 ENV KC_DB_PASSWORD=fKiULOUJCYSmBUgZbGyWtTHGNmttyxJd
-ENV KC_DB_URL=postgresql://postgres:fKiULOUJCYSmBUgZbGyWtTHGNmttyxJd@postgres.railway.internal:5432/railway
+ENV KC_DB_URL=postgresql://postgres:fKiULOUJCYSmBUgZbGyWtTHGNmttyxJd@switchyard.proxy.rlwy.net:29131/railway
 ENV KC_DB_USERNAME=postgres
 ENV KC_HEALTH_ENABLED=true
 
