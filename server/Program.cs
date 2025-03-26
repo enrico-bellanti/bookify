@@ -195,14 +195,14 @@ builder.Services.AddHttpClient();
 var app = builder.Build();
 
 // Apply migrations at startup
-if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
-{
-    using (var scope = app.Services.CreateScope())
-    {
-        var dbContext = scope.ServiceProvider.GetRequiredService<YourDbContext>();
-        dbContext.Database.Migrate();
-    }
-}
+// if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
+// {
+//     using (var scope = app.Services.CreateScope())
+//     {
+//         var dbContext = scope.ServiceProvider.GetRequiredService<YourDbContext>();
+//         dbContext.Database.Migrate();
+//     }
+// }
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
