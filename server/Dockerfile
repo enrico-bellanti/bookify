@@ -6,6 +6,12 @@ COPY . .
 RUN dotnet restore "./Bookify.csproj" --disable-parallel
 RUN dotnet publish "./Bookify.csproj" -c release -o /app --no-restore
 
+# Install the EF tools
+RUN dotnet tool install --global dotnet-ef
+ENV PATH="${PATH}:/root/.dotnet/tools"
+RUN dotnet ef database update
+
+
 # Serve Stage
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
