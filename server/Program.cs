@@ -136,7 +136,7 @@ builder.Services.AddSwaggerGen(options =>
                 }
             },
 
-            // Per il flusso Authorization Code (più sicuro)
+            // Per il flusso Authorization Code (piï¿½ sicuro)
             AuthorizationCode = new OpenApiOAuthFlow
             {
                 AuthorizationUrl = new Uri($"{authority}/protocol/openid-connect/auth"),
@@ -204,7 +204,7 @@ if (app.Environment.IsDevelopment())
 
         // Configurazione OAuth per Swagger UI
         options.OAuthClientId(builder.Configuration["Keycloak:ClientId"]); // client ID configurato in Keycloak
-        options.OAuthClientSecret(builder.Configuration["Keycloak:Secret"]); // se il tuo client è configurato come confidential
+        options.OAuthClientSecret(builder.Configuration["Keycloak:Secret"]); // se il tuo client ï¿½ configurato come confidential
         options.OAuthUsePkce(); // Consigliato per maggiore sicurezza con Authorization Code Flow
         options.OAuthScopeSeparator(" ");
 
