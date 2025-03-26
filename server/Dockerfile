@@ -2,36 +2,24 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /source
 COPY . .
-# RUN ls -la  # <-- Aggiungi questo per debug, vedrai i file copiati
 RUN dotnet restore "./Bookify.csproj" --disable-parallel
 RUN dotnet publish "./Bookify.csproj" -c release -o /app --no-restore
 
-# Install the EF tools
-# RUN dotnet tool install --global dotnet-ef
-# ENV PATH="${PATH}:/root/.dotnet/tools"
-# # ENV ConnectionStrings__DefaultConnection="Server=${{ Postgres-15.DATABASE_PRIVATE_URL }},1433;Database=railway;User Id=postgres;Password=b6FFF4Gb2DA15ADCCae25EE1gfFEbbdb;TrustServerCertificate=True"
-# RUN dotnet ef database update
-
+# Install EF Core tools in the build image
+RUN dotnet tool install --global dotnet-ef
 
 # Serve Stage
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
 COPY --from=build /app ./
+COPY entrypoint.sh /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
 
 # Configure ASP.NET Core to use the correct URLs
 ENV ASPNETCORE_URLS=http://+:5000
 ENV ASPNETCORE_ENVIRONMENT=Development
-# ENV ASPNETCORE_URLS=http://+:5000;https://+:5001
 ENV ASPNETCORE_HTTP_PORT=5000
-# ENV ASPNETCORE_HTTPS_PORT=5001
-# Development certificate for HTTPS in container
-# ENV ASPNETCORE_Kestrel__Certificates__Default__Path=/app/cert/cert.pfx
-# ENV ASPNETCORE_Kestrel__Certificates__Default__Password=YourSecurePassword
-
-# Create directory for the cert (will be mounted from host)
-# RUN mkdir -p /app/cert
 
 EXPOSE 5000
-# EXPOSE 5001
 
-ENTRYPOINT ["dotnet", "Bookify.dll"]
+ENTRYPOINT ["/app/entrypoint.sh"]
