@@ -4,6 +4,11 @@ WORKDIR /source
 COPY . .
 # RUN ls -la  # <-- Aggiungi questo per debug, vedrai i file copiati
 RUN dotnet restore "./Bookify.csproj" --disable-parallel
+# Add EF Core tools and create migration
+RUN dotnet tool install --global dotnet-ef
+ENV PATH="${PATH}:/root/.dotnet/tools"
+RUN dotnet ef migrations add InitialCreate
+
 RUN dotnet publish "./Bookify.csproj" -c release -o /app --no-restore
 
 # Install the EF tools
