@@ -13,7 +13,13 @@ builder.Configuration.AddEnvironmentVariables();
 
 // Configurazione DbContext
 builder.Services.AddDbContext<BookifyDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlServer(
+        builder.Configuration["ConnectionStrings:DefaultConnection"]
+    ));
+    // options.UseSqlServer(
+    //     builder.Configuration.GetConnectionString("DefaultConnection") ??
+    //     Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection")
+    // ));
 
 // Configurazione Keycloak JWT Authentication
 builder.Services.AddAuthentication(options =>
