@@ -6,7 +6,8 @@ namespace Bookify.Services
 {
     public interface IAddressService
     {
-        Task<PagedResult<Address>> GetAllAddresses(int page = 0,
+        Task<PagedResult<Address>> GetAllAddresses(
+            int page = 0,
             int size = 25,
             string sortBy = "Id",
             bool isDescending = false

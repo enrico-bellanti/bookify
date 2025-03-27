@@ -1,6 +1,7 @@
 ﻿using System.Security.Claims;
 using Bookify.Dtos;
 using Bookify.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,6 +9,7 @@ namespace Bookify.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class BookingController : ControllerBase
     {
         private readonly IBookingService _bookingService;
@@ -25,7 +27,12 @@ namespace Bookify.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> Get(
+            [FromQuery] int? page = null,
+            [FromQuery] int? size = null,
+            [FromQuery] string sortBy = null,
+            [FromQuery] bool? isDescending = null
+        )
         {
             var userUuid = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (userUuid == null)
@@ -40,9 +47,21 @@ namespace Bookify.Controllers
             var isAdmin = _keycloakUserService.CompareUserRoles(requiredRoles, userRoles);
             if (isAdmin)
             {
-                return Ok(await _bookingService.GetAllBookings());
+                return Ok(await _bookingService.GetAllBookings(
+                    null,
+                    page ?? 0,
+                    size ?? 25,
+                    sortBy ?? "Id",
+                    isDescending ?? false
+                ));
             }
-            return Ok(await _bookingService.GetAllBookings(userUuid));
+            return Ok(await _bookingService.GetAllBookings(
+                userUuid,
+                page ?? 0,
+                size ?? 25,
+                sortBy ?? "Id",
+                isDescending ?? false
+            ));
         }
 
         [HttpGet("{id}")]

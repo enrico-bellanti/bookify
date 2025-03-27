@@ -11,7 +11,7 @@ namespace Bookify.Repositories
         public interface IRepository<TEntity, TKey> where TEntity : class
         {
             // Basic CRUD operations
-            Task<PagedResult<TEntity>> GetAllAsync(PageRequest pageRequest = null, CancellationToken cancellationToken = default);
+            Task<PagedResult<TEntity>> GetAllAsync(PageRequest pageRequest = null, Expression<Func<TEntity, bool>> filter = null, CancellationToken cancellationToken = default);
             Task<TEntity> GetByIdAsync(TKey id, CancellationToken cancellationToken = default);
             Task<TEntity?> CreateAsync(TEntity entity, CancellationToken cancellationToken = default);
             Task<TEntity?> UpdateAsync(TEntity entity, CancellationToken cancellationToken = default);

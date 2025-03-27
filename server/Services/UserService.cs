@@ -1,6 +1,8 @@
 ﻿using Bookify.Data;
+using Bookify.Data.Pagination;
 using Bookify.Dtos;
 using Bookify.Entities;
+using Bookify.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
@@ -8,22 +10,33 @@ namespace Bookify.Services
 {
     public class UserService: IUserService
     {
-        private readonly BookifyDbContext _db;
+        private readonly IUserRepository _userRepository;
+        private readonly IAddressRepository _addressRepository;
         private readonly IKeycloakUserService _keycloakUserService;
+
         public UserService(
-            BookifyDbContext db,
-            IKeycloakUserService keycloakUserService
+            IUserRepository userRepository,
+            IKeycloakUserService keycloakUserService,
+            IAddressRepository addressRepository
         )
         {
-            _db = db;
+            _userRepository = userRepository;
             _keycloakUserService = keycloakUserService;
+            _addressRepository = addressRepository;
         }
 
-        public async Task<List<User>> GetAllUsers(bool? isActive)
+        public async Task<PagedResult<User>> GetAllUsers(
+            int page = 0,
+            int size = 25,
+            string sortBy = "Id",
+            bool isDescending = false
+        )
         {
-            if (isActive == null) { return await _db.Users.ToListAsync(); }
+            var sortDirection = isDescending ? SortDirection.DESC : SortDirection.ASC;
+            var sort = Sort.By(sortDirection, sortBy);
+            var pageRequest = PageRequest.Of(page, size, sort);
 
-            return await _db.Users.Where(u => u.IsActive).ToListAsync();
+            return await _userRepository.GetAllAsync(pageRequest);
         }
 
         public async Task<User?> AddUser(AddUserRequestDto obj)
@@ -62,9 +75,7 @@ namespace Bookify.Services
                 Latitude = obj.Address.Latitude,
                 Longitude = obj.Address.Longitude
             };
-
-            _db.Addresses.Add(address);
-            await _db.SaveChangesAsync(); // Save to get the AddressId
+            await _addressRepository.CreateAsync(address);
 
             var user = new User()
             {
@@ -78,25 +89,29 @@ namespace Bookify.Services
                 Address = address // Set the navigation property
             };
 
-            _db.Users.Add(user);
-            var result = await _db.SaveChangesAsync();
-            return result > 0 ? user : throw new DbUpdateException("Failed to save user to database.");
+            var newUser = await _userRepository.CreateAsync(user);
+            if (newUser == null)
+            {
+                throw new DbUpdateException("Failed to save user to database.");
+            }
+            return newUser;
         }
 
         public Task<bool> DeleteUserByID(int id)
         {
+            //rememeber to do anlt if admin and delete keyclaok record
             throw new NotImplementedException();
         }
 
         public async Task<User?> GetUserByID(int id)
         {
-            return await _db.Users.FirstOrDefaultAsync(u => u.Id == id);
+            return await _userRepository.SingleOrDefaultAsync(u => u.Id == id);
         }
         public async Task<User?> GetUserByUuid(string uuid)
         {
             if (Guid.TryParse(uuid, out Guid guidUuid))
             {
-                return await _db.Users.FirstOrDefaultAsync(u => u.Uuid == guidUuid);
+                return await _userRepository.SingleOrDefaultAsync(u => u.Uuid == guidUuid); ;
             }
             return null;
         }
@@ -106,7 +121,7 @@ namespace Bookify.Services
         {
             var updateKeycloakUser = new UpdateKeycloakUserDto();
 
-            var user = await _db.Users.FirstOrDefaultAsync(u => u.Id == id);
+            var user = await _userRepository.SingleOrDefaultAsync(u => u.Id == id);
             if (user == null)
                 return null;
 
@@ -146,9 +161,12 @@ namespace Bookify.Services
                 throw new ApplicationException("Failed to update user in Keycloak authentication service.");
             }
 
-            _db.Users.Update(user);
-            var result = await _db.SaveChangesAsync();
-            return result > 0 ? user : throw new DbUpdateException("Failed to update user to database.");
+            var updatedUser = await _userRepository.UpdateAsync(user);
+            if (updatedUser == null)
+            {
+                throw new DbUpdateException("Failed to update user to database.");
+            }
+            return updatedUser;
         }
 
 
@@ -159,7 +177,7 @@ namespace Bookify.Services
 
         public async Task<bool> UpdatePassword(int id, string password, string confirmPassword)
         {
-            var user = await _db.Users.FirstOrDefaultAsync(u => u.Id == id);
+            var user = await _userRepository.SingleOrDefaultAsync(u => u.Id == id);
             if (user == null)
                 return false;
 

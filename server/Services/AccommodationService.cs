@@ -1,18 +1,37 @@
 ﻿using Bookify.Data;
+using Bookify.Data.Pagination;
 using Bookify.Dtos;
 using Bookify.Entities;
+using Bookify.Repositories;
 using Microsoft.EntityFrameworkCore;
 namespace Bookify.Services
 {
     public class AccommodationService : IAccommodationService
     {
-        private readonly BookifyDbContext _db;
-        public AccommodationService(BookifyDbContext db)
+        private readonly IAccommodationRepository _accommodationRepository;
+        private readonly IUserRepository _userRepository;
+
+        public AccommodationService(
+            IAccommodationRepository accommodationRepository, 
+            IUserRepository userRepository
+        )
         {
-            _db = db;
+            _accommodationRepository = accommodationRepository;
+            _userRepository = userRepository;
         }
-        public async Task<List<Accommodation>> GetAllAccommodations(string userUuid = null)
+
+        public async Task<PagedResult<Accommodation>> GetAllAccommodations(
+            string userUuid = null,
+            int page = 0,
+            int size = 25,
+            string sortBy = "Id",
+            bool isDescending = false
+        )
         {
+            var sortDirection = isDescending ? SortDirection.DESC : SortDirection.ASC;
+            var sort = Sort.By(sortDirection, sortBy);
+            var pageRequest = PageRequest.Of(page, size, sort);
+
             if (userUuid != null)
             {
                 // Parse the string UUID to a valid GUID
@@ -20,26 +39,22 @@ namespace Bookify.Services
                 {
                     throw new ArgumentException("Invalid UUID format");
                 }
-                var user = await _db.Users.FirstOrDefaultAsync(u => u.Uuid == userGuid);
+                var user = await _accommodationRepository.SingleOrDefaultAsync(u => u.Uuid == userGuid);
                 if (user == null)
                 {
                     throw new KeyNotFoundException($"User with UUID {userUuid} not found");
                 }
-                return await _db.Accommodations
-                    .Include(a => a.Address)
-                    .Where(a => a.OwnerId == user.Id)
-                    .ToListAsync();
+                return await _accommodationRepository.GetAllAsync(
+                    pageRequest,
+                    filter: b => b.OwnerId == user.Id
+                );
             }
-            return await _db.Accommodations
-                .Include(a => a.Address)
-                .ToListAsync();
+            return await _accommodationRepository.GetAllAsync(pageRequest);
         }
 
         public async Task<Accommodation?> GetAccommodationByID(int id)
         {
-            return await _db.Accommodations
-                .Include(a => a.Address)
-                .FirstOrDefaultAsync(a => a.Id == id);
+            return await _accommodationRepository.SingleOrDefaultAsync(booking => booking.Id == id);
         }
 
         public async Task<Accommodation?> AddAccommodation(AccomodationDto obj)
@@ -70,18 +85,13 @@ namespace Bookify.Services
             };
 
             // Add to database and save changes
-            await _db.Accommodations.AddAsync(accommodation);
-            await _db.SaveChangesAsync();
-
-            return accommodation;
+            return await _accommodationRepository.CreateAsync(accommodation);
         }
 
         public async Task<Accommodation?> UpdateAccommodation(int id, AccomodationDto obj)
         {
             // Find existing accommodation with address
-            var accommodation = await _db.Accommodations
-                .Include(a => a.Address)
-                .FirstOrDefaultAsync(a => a.Id == id);
+            var accommodation = await _accommodationRepository.SingleOrDefaultAsync(accommodation => accommodation.Id == id);
 
             if (accommodation == null)
             {
@@ -91,7 +101,7 @@ namespace Bookify.Services
             // Validate owner exists if changing owner
             if (obj.OwnerId != accommodation.OwnerId)
             {
-                var owner = await _db.Users.FirstOrDefaultAsync(u => u.Id == obj.OwnerId);
+                var owner = await _userRepository.SingleOrDefaultAsync(u => u.Id == obj.OwnerId);
                 if (owner == null)
                 {
                     throw new KeyNotFoundException($"Owner with ID {obj.OwnerId} not found");
@@ -135,23 +145,18 @@ namespace Bookify.Services
             //accommodation.UpdatedAt = DateTime.UtcNow;
 
             // Save changes
-            await _db.SaveChangesAsync();
-
-            return accommodation;
+            return await _accommodationRepository.UpdateAsync(accommodation);
         }
 
         public async Task<bool> DeleteAccommodationByID(int id)
         {
-            var accommodation = await _db.Accommodations.FirstOrDefaultAsync(a => a.Id == id);
+            var accommodation = await _accommodationRepository.SingleOrDefaultAsync(a => a.Id == id);
             if (accommodation == null)
             {
                 return false;
             }
 
-            _db.Accommodations.Remove(accommodation);
-            await _db.SaveChangesAsync();
-
-            return true;
+            return await _accommodationRepository.DeleteByIdAsync(id);
         }
     }
 }

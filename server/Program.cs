@@ -185,9 +185,13 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddScoped<IKeycloakUserService, KeycloakUserService>();
 builder.Services.AddScoped<IAccommodationService, AccommodationService>();
 builder.Services.AddScoped<IBookingService, BookingService>();
-builder.Services.AddScoped<IAddressRepository, AddressRepository>();
 builder.Services.AddScoped<IAddressService, AddressService>();
 builder.Services.AddScoped<IUserService, UserService>();
+//repositories
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IAddressRepository, AddressRepository>();
+builder.Services.AddScoped<IBookingRepository, BookingRepository>();
+builder.Services.AddScoped<IAccommodationRepository, AccommodationRepository>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

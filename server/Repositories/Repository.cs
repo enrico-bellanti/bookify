@@ -23,11 +23,19 @@ namespace Bookify.Repositories
 
         public virtual async Task<PagedResult<TEntity>> GetAllAsync(
             PageRequest pageRequest = null,
-            CancellationToken cancellationToken = default)
+            Expression<Func<TEntity, bool>> filter = null,
+            CancellationToken cancellationToken = default
+        )
         {
             pageRequest ??= PageRequest.Of(0, 25);
 
             var query = _dbSet.AsQueryable();
+
+            // Apply filtering if provided
+            if (filter != null)
+            {
+                query = query.Where(filter);
+            }
 
             // Get total count before applying pagination
             var totalCount = await query.CountAsync(cancellationToken);

@@ -27,7 +27,8 @@ namespace Bookify.Controllers
                 page ?? 0,
                 size ?? 25,
                 sortBy ?? "Id",
-                isDescending ?? false);
+                isDescending ?? false
+            );
 
             return Ok(addresses);
         }

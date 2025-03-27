@@ -5,8 +5,8 @@ COPY . .
 # RUN ls -la  # <-- Aggiungi questo per debug, vedrai i file copiati
 RUN dotnet restore "./Bookify.csproj" --disable-parallel
 # Add EF Core tools and create migration
-RUN dotnet tool install --global dotnet-ef
-ENV PATH="${PATH}:/root/.dotnet/tools"
+# RUN dotnet tool install --global dotnet-ef
+# ENV PATH="${PATH}:/root/.dotnet/tools"
 # Accept the connection string as a build argument
 ARG ConnectionStrings__DefaultConnection
 
@@ -29,11 +29,18 @@ FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
 COPY --from=build /app ./
 
+ARG ASPNETCORE_URLS
+ARG ASPNETCORE_ENVIRONMENT
+ARG ASPNETCORE_HTTP_PORT
+
+ENV ASPNETCORE_URLS=$ASPNETCORE_URLS
+ENV ASPNETCORE_ENVIRONMENT=$ASPNETCORE_ENVIRONMENT
+ENV ASPNETCORE_HTTP_PORT=$ASPNETCORE_HTTP_PORT
 # Configure ASP.NET Core to use the correct URLs
-ENV ASPNETCORE_URLS=http://+:5000
-ENV ASPNETCORE_ENVIRONMENT=Development
+# ENV ASPNETCORE_URLS=http://+:5000
+# ENV ASPNETCORE_ENVIRONMENT=Development
 # ENV ASPNETCORE_URLS=http://+:5000;https://+:5001
-ENV ASPNETCORE_HTTP_PORT=5000
+# ENV ASPNETCORE_HTTP_PORT=5000
 # ENV ASPNETCORE_HTTPS_PORT=5001
 # Development certificate for HTTPS in container
 # ENV ASPNETCORE_Kestrel__Certificates__Default__Path=/app/cert/cert.pfx
