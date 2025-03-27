@@ -27,7 +27,12 @@ namespace Bookify.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> Get(
+            [FromQuery] int? page = null,
+            [FromQuery] int? size = null,
+            [FromQuery] string sortBy = null,
+            [FromQuery] bool? isDescending = null
+        )
         {
             var userUuid = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (userUuid == null)
@@ -42,9 +47,21 @@ namespace Bookify.Controllers
             var isAdmin = _keycloakUserService.CompareUserRoles(requiredRoles, userRoles);
             if (isAdmin)
             {
-                return Ok(await _accommodationService.GetAllAccommodations());
+                return Ok(await _accommodationService.GetAllAccommodations(
+                    null,
+                    page ?? 0,
+                    size ?? 25,
+                    sortBy ?? "Id",
+                    isDescending ?? false
+                ));
             }
-            return Ok(await _accommodationService.GetAllAccommodations(userUuid));
+            return Ok(await _accommodationService.GetAllAccommodations(
+                userUuid,
+                page ?? 0,
+                size ?? 25,
+                sortBy ?? "Id",
+                isDescending ?? false
+            ));
         }
 
         [HttpGet("{id}")]
