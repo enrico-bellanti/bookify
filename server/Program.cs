@@ -9,22 +9,9 @@ using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Configuration.AddEnvironmentVariables();
-
 // Configurazione DbContext
 builder.Services.AddDbContext<BookifyDbContext>(options =>
-{
-    var connectionString = Environment.GetEnvironmentVariable("ConnectionStrings:DefaultConnection")
-    ?? builder.Configuration.GetConnectionString("DefaultConnection");
-    options.UseSqlServer(connectionString);
-});
-    // options.UseSqlServer(
-    //     builder.Configuration["ConnectionStrings:DefaultConnection"]
-    // ));
-    // options.UseSqlServer(
-    //     builder.Configuration.GetConnectionString("DefaultConnection") ??
-    //     Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection")
-    // ));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Configurazione Keycloak JWT Authentication
 builder.Services.AddAuthentication(options =>
@@ -208,14 +195,14 @@ builder.Services.AddHttpClient();
 var app = builder.Build();
 
 // Apply migrations at startup
-// if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
-// {
-//     using (var scope = app.Services.CreateScope())
-//     {
-//         var dbContext = scope.ServiceProvider.GetRequiredService<BookifyDbContext>();
-//         dbContext.Database.Migrate();
-//     }
-// }
+if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
+{
+    using (var scope = app.Services.CreateScope())
+    {
+        var dbContext = scope.ServiceProvider.GetRequiredService<BookifyDbContext>();
+        dbContext.Database.Migrate();
+    }
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
