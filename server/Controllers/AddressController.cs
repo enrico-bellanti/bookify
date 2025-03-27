@@ -16,9 +16,19 @@ namespace Bookify.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> Get(
+            [FromQuery] int? page = null,
+            [FromQuery] int? size = null,
+            [FromQuery] string sortBy = null,
+            [FromQuery] bool? isDescending = null)
         {
-            var addresses = await _addressService.GetAllAddresses();
+            // Usa i valori passati se presenti, altrimenti usa null per far utilizzare i default del service
+            var addresses = await _addressService.GetAllAddresses(
+                page ?? 0,
+                size ?? 25,
+                sortBy ?? "Id",
+                isDescending ?? false);
+
             return Ok(addresses);
         }
 

@@ -1,11 +1,13 @@
 using System.Security.Claims;
 using System.Text.Json;
 using Bookify.Data;
+using Bookify.Repositories;
 using Bookify.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using static Bookify.Repositories.IRepository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -183,6 +185,7 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddScoped<IKeycloakUserService, KeycloakUserService>();
 builder.Services.AddScoped<IAccommodationService, AccommodationService>();
 builder.Services.AddScoped<IBookingService, BookingService>();
+builder.Services.AddScoped<IAddressRepository, AddressRepository>();
 builder.Services.AddScoped<IAddressService, AddressService>();
 builder.Services.AddScoped<IUserService, UserService>();
 
