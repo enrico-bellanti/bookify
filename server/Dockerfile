@@ -7,7 +7,12 @@ RUN dotnet restore "./Bookify.csproj" --disable-parallel
 # Add EF Core tools and create migration
 RUN dotnet tool install --global dotnet-ef
 ENV PATH="${PATH}:/root/.dotnet/tools"
-ENV ConnectionStrings__DefaultConnection="Host=postgres-15.railway.internal;Port=5432;Database=railway;Username=postgres;Password=b6FFF4Gb2DA15ADCCae25EE1gfFEbbdb;SSL Mode=Require;Trust Server Certificate=true"
+# Accept the connection string as a build argument
+ARG ConnectionStrings__DefaultConnection
+
+# Set it as an environment variable with the same name
+ENV ConnectionStrings__DefaultConnection=$ConnectionStrings__DefaultConnection
+# ENV ConnectionStrings__DefaultConnection="Host=postgres-15.railway.internal;Port=5432;Database=railway;Username=postgres;Password=b6FFF4Gb2DA15ADCCae25EE1gfFEbbdb;SSL Mode=Require;Trust Server Certificate=true"
 # RUN dotnet ef migrations add InitialCreate
 # RUN dotnet ef database update
 
