@@ -1,0 +1,15 @@
+@import "tailwindcss";
+
+html, body {
+    font-family: "Raleway", sans-serif;
+    /* @apply bg-gradient-to-tl from-slate-900 to-purple-500 text-white bg-fixed  h-full; */
+}
+
+.page{
+    @apply pt-26
+}
+
+.title {
+    @apply font-extrabold my-3 text-purple-500 text-[2rem] text-center
+          2xl:text-[18rem]  2xl:fixed 2xl:bottom-0 2xl:z-0   2xl:rotate-[270deg] 2xl:w-96  2xl:-left-12  2xl:opacity-30 2xl:pointer-events-none
+}

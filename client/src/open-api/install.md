@@ -1,0 +1,1 @@
+docker run --rm -v "${PWD}:/local" openapitools/openapi-generator-cli generate -i /local/openapi.json -g typescript-axios -o /local/src/api --additional-properties=withSeparateModelsAndApi=true,modelPackage=models,apiPackage=api,supportsES6=true,withInterfaces=true,useSingleRequestParameter=true
