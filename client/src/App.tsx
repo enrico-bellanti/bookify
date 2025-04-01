@@ -1,5 +1,5 @@
 import './App.css'
-import Test from './pages/test/Test'
+import { Home } from './pages/home/Home'
 import { NavBar } from './shared/components/core/NavBar'
 
 function App() {
@@ -10,7 +10,7 @@ function App() {
         <NavBar></NavBar>
       </header>
       <div className='page'>
-        <Test></Test>
+        <Home></Home>
       </div>
     </>
   )
