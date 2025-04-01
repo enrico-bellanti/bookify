@@ -1,40 +1,14 @@
-# Stage 1: Build .NET application
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-WORKDIR /app
+FROM nginx:alpine
 
-# Copy csproj and restore as distinct layers
-COPY *.sln .
-COPY **/*.csproj ./
-RUN for file in $(find . -name "*.csproj"); do mkdir -p "${file%/*}/" && mv "$file" "${file%/*}/"; done
-RUN dotnet restore
+# Rimuove la configurazione predefinita
+RUN rm /etc/nginx/conf.d/default.conf
 
-# Copy everything else and build
-COPY . .
-RUN dotnet publish -c Release -o out
-
-# Stage 2: Runtime environment with Nginx
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
-WORKDIR /app
-
-# Install Nginx
-RUN apt-get update && \
-    apt-get install -y nginx && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
-
-# Copy .NET runtime app
-COPY --from=build /app/out ./
-
-# Copy Nginx configuration
+# Copia la configurazione personalizzata di Nginx
 COPY nginx/nginx.conf /etc/nginx/nginx.conf
-COPY nginx/default.conf /etc/nginx/conf.d/default.conf
+COPY nginx/default.conf /etc/nginx/conf.d/
 
-# Set up startup script
-COPY nginx/start.sh /start.sh
-RUN chmod +x /start.sh
-
-# Expose port
+# Espone la porta 8080
 EXPOSE 8080
 
-# Start both services
-ENTRYPOINT ["/start.sh"]
+# Avvia Nginx in foreground
+CMD ["nginx", "-g", "daemon off;"]

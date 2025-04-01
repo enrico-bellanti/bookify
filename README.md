@@ -1,57 +1,44 @@
-# bookify
+# Nginx Proxy per Railway
 
-# .NET API con Nginx per la Gestione CORS
+Questo repository contiene una configurazione Nginx ottimizzata per funzionare come proxy inverso su Railway, gestendo il CORS e inoltrando le richieste a un servizio backend interno.
 
-Questo progetto include un'applicazione .NET con un proxy Nginx integrato per gestire le richieste CORS.
-
-## Struttura della Directory
+## Struttura del Progetto
 
 ```
 .
 ├── Dockerfile
 ├── docker-compose.yml
-├── nginx/
-│   ├── nginx.conf
-│   ├── default.conf
-│   └── start.sh
-└── ... (file del progetto .NET)
+└── nginx/
+    ├── nginx.conf
+    └── default.conf
 ```
 
-## Configurazione
+## Funzionalità
 
-### Modificare l'Applicazione .NET
+- Proxy inverso verso un servizio backend interno (`bookify.railway.internal:5000`)
+- Gestione degli header CORS per consentire richieste cross-origin
+- Gestione corretta delle richieste preflight OPTIONS
+- Container leggero basato su Alpine Linux
 
-1. **Assicurati di aggiornare il nome dell'applicazione** nel file `nginx/start.sh`:
+## Deployment su Railway
 
-   ```bash
-   dotnet /app/YourApplication.dll --urls=http://localhost:5000
-   ```
+1. Clona questo repository
+2. Connettilo a Railway
+3. Configura le variabili d'ambiente se necessario
+4. Railway costruirà e deployerà automaticamente il servizio Nginx
 
-   Sostituisci `YourApplication.dll` con il nome corretto del tuo assembly.
+## Configurazione CORS
 
-2. **Configura l'URL di origine CORS** in `nginx/default.conf`:
-   ```nginx
-   add_header 'Access-Control-Allow-Origin' 'http://tuodominio.com' always;
-   ```
-   Sostituisci `'*'` con il dominio specifico da cui desideri consentire le richieste.
+Il proxy è configurato per permettere richieste da qualsiasi origine (`*`). Per limitare l'accesso a origini specifiche, modifica il valore di `Access-Control-Allow-Origin` nel file `nginx/default.conf`.
 
-## Deployment
+## Uso della Rete Privata Railway
 
-### Locale con Docker Compose
+Questo proxy utilizza la rete privata di Railway per comunicare con altri servizi, utilizzando nomi di dominio interni come `bookify.railway.internal`. Ciò garantisce una comunicazione più sicura ed efficiente tra i servizi.
 
-```bash
-docker-compose up -d
-```
+## Personalizzazioni
 
-### Su Railway
+Se hai bisogno di configurazioni più specifiche:
 
-1. Connetti il repository a Railway
-2. Railway utilizzerà automaticamente il Dockerfile per costruire e deployare l'applicazione
-3. Configura le variabili d'ambiente in Railway se necessario
-
-## Note Tecniche
-
-- L'applicazione .NET espone internamente la porta 5000
-- Nginx ascolta sulla porta 8080 e inoltra le richieste all'applicazione .NET
-- Nginx gestisce tutti gli header CORS necessari
-- Le richieste OPTIONS vengono gestite correttamente per le richieste preflight CORS
+- Modifica `nginx/default.conf` per cambiare il routing o aggiungere location
+- Aggiorna il Dockerfile se hai bisogno di funzionalità aggiuntive
+- Personalizza gli header CORS per i tuoi requisiti specifici
