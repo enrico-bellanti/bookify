@@ -114,9 +114,9 @@ builder.Services.AddSwaggerGen(options =>
 
     options.SwaggerDoc("v1", new OpenApiInfo
     {
-        Title = "Token Validation API",
+        Title = "Bookify API",
         Version = "v1",
-        Description = "API per testare la validazione dei token JWT da Keycloak"
+        Description = "API per testare il back-end di Bookify"
     });
 
     // Definisci lo schema di sicurezza JWT
