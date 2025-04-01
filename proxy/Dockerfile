@@ -7,8 +7,8 @@ RUN rm /etc/nginx/conf.d/default.conf
 COPY nginx/nginx.conf /etc/nginx/nginx.conf
 COPY nginx/default.conf /etc/nginx/conf.d/
 
-# Espone la porta 2 invece di 8080
-EXPOSE 2
+# Espone la porta 8080
+EXPOSE 8080
 
 # Avvia Nginx in foreground
 CMD ["nginx", "-g", "daemon off;"]
