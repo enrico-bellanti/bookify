@@ -1,8 +1,8 @@
 /* tslint:disable */
 /* eslint-disable */
 /**
- * Token Validation API
- * API per testare la validazione dei token JWT da Keycloak
+ * Bookify API
+ * API per testare il back-end di Bookify
  *
  * The version of the OpenAPI document: v1
  * 

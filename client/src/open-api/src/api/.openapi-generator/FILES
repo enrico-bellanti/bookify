@@ -12,9 +12,9 @@ common.ts
 configuration.ts
 git_push.sh
 index.ts
-models/accommodation-request-dto.ts
+models/accommodation-create.ts
 models/accommodation-type.ts
-models/accomodation-dto.ts
+models/accommodation-update.ts
 models/add-user-request-dto.ts
 models/address-dto.ts
 models/booking-dto.ts

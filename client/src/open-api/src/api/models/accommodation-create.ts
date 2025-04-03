@@ -1,8 +1,8 @@
 /* tslint:disable */
 /* eslint-disable */
 /**
- * Token Validation API
- * API per testare la validazione dei token JWT da Keycloak
+ * Bookify API
+ * API per testare il back-end di Bookify
  *
  * The version of the OpenAPI document: v1
  * 
@@ -23,25 +23,31 @@ import type { AddressDto } from './address-dto';
 /**
  * 
  * @export
- * @interface AccommodationRequestDto
+ * @interface AccommodationCreate
  */
-export interface AccommodationRequestDto {
+export interface AccommodationCreate {
     /**
      * 
      * @type {string}
-     * @memberof AccommodationRequestDto
+     * @memberof AccommodationCreate
      */
     'name': string | null;
     /**
      * 
      * @type {AccommodationType}
-     * @memberof AccommodationRequestDto
+     * @memberof AccommodationCreate
      */
     'type': AccommodationType;
     /**
      * 
+     * @type {number}
+     * @memberof AccommodationCreate
+     */
+    'ownerId': number;
+    /**
+     * 
      * @type {AddressDto}
-     * @memberof AccommodationRequestDto
+     * @memberof AccommodationCreate
      */
     'address': AddressDto;
 }

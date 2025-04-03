@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Security.Claims;
+using Bookify.Data.Pagination;
 using Bookify.Dtos;
 using Bookify.Dtos.Accommodation;
 using Bookify.Helpers;
@@ -36,7 +37,7 @@ namespace Bookify.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get(
+        public async Task<ActionResult<PagedResult<AccommodationDto>>> Get(
             [FromQuery] int? page = null,
             [FromQuery] int? size = null,
             [FromQuery] string sortBy = null,
@@ -56,14 +57,14 @@ namespace Bookify.Controllers
             //var isAdmin = _keycloakUserService.CompareUserRoles(requiredRoles, userRoles);
             //if (isAdmin)
             //{
-            //    return Ok(await _accommodationService.GetPagedAccommodationsAsync(
-            //        null,
-            //        page ?? 0,
-            //        size ?? 25,
-            //        sortBy ?? "Id",
-            //        isDescending ?? false,
-            //        ParseIncludes(includes)
-            //    ));
+            //return Ok(await _accommodationService.GetPagedAccommodationsAsync(
+            //    null,
+            //    page ?? 0,
+            //    size ?? 25,
+            //    sortBy ?? "Id",
+            //    isDescending ?? false,
+            //    ParseIncludes(includes)
+            //));
             //}
 
             return Ok(await _accommodationService.GetPagedAccommodationsAsync(
@@ -77,55 +78,48 @@ namespace Bookify.Controllers
 
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> Get(int id, [FromQuery] string includes = null)
+        public async Task<ActionResult<AccommodationDto>> Get(int id, [FromQuery] string includes = null)
         {
             var userUuid = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (userUuid == null)
             {
                 return Unauthorized();
             }
-
             // Get the accommodation DTO with any requested includes
             var accommodationDto = await _accommodationService.GetAccommodationByIdAsync(id, QueryHelper.ParseIncludes(includes));
             if (accommodationDto == null)
             {
                 return NotFound();
             }
-
             // Check if user is admin
             string[] userRoles = User.FindAll(ClaimTypes.Role)
                                    .Select(claim => claim.Value)
                                    .ToArray();
             var requiredRoles = new[] { "help-desk" };
             var isAdmin = _keycloakUserService.CompareUserRoles(requiredRoles, userRoles);
-
             // If admin, return the DTO directly
             if (isAdmin)
             {
-                return Ok(accommodationDto);
+                return accommodationDto; // You can return the type directly
             }
-
             // Get the current user
             var user = await _userService.GetUserByUuid(userUuid);
             if (user == null)
             {
                 return Unauthorized(); // User not found in the system
             }
-
             // Check if user is the owner of the accommodation
             var isOwner = accommodationDto.OwnerId == user.Id;
-
             // Only allow access if user is owner
             if (!isOwner)
             {
                 return Forbid(); // Return 403 Forbidden status code
             }
-
-            return Ok(accommodationDto);
+            return accommodationDto; // You can return the type directly
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] AccommodationCreate accommodationCreate)
+        public async Task<ActionResult<AccommodationDto>> Post([FromBody] AccommodationCreate accommodationCreate)
         {
             var userUuid = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (userUuid == null)
@@ -160,7 +154,7 @@ namespace Bookify.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, [FromBody] AccommodationUpdate accommodationUpdate)
+        public async Task<ActionResult<AccommodationDto>> Put(int id, [FromBody] AccommodationUpdate accommodationUpdate)
         {
             var userUuid = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (userUuid == null)

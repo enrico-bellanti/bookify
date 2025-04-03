@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "Token Validation API",
-    "description": "API per testare la validazione dei token JWT da Keycloak",
+    "title": "Bookify API",
+    "description": "API per testare il back-end di Bookify",
     "version": "v1"
   },
   "paths": {
@@ -41,6 +41,13 @@
             "schema": {
               "type": "boolean"
             }
+          },
+          {
+            "name": "includes",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -57,17 +64,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/AccommodationRequestDto"
+                "$ref": "#/components/schemas/AccommodationCreate"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/AccommodationRequestDto"
+                "$ref": "#/components/schemas/AccommodationCreate"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/AccommodationRequestDto"
+                "$ref": "#/components/schemas/AccommodationCreate"
               }
             }
           }
@@ -92,6 +99,13 @@
             "schema": {
               "type": "integer",
               "format": "int32"
+            }
+          },
+          {
+            "name": "includes",
+            "in": "query",
+            "schema": {
+              "type": "string"
             }
           }
         ],
@@ -120,17 +134,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/AccomodationDto"
+                "$ref": "#/components/schemas/AccommodationUpdate"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/AccomodationDto"
+                "$ref": "#/components/schemas/AccommodationUpdate"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/AccomodationDto"
+                "$ref": "#/components/schemas/AccommodationUpdate"
               }
             }
           }
@@ -640,10 +654,11 @@
   },
   "components": {
     "schemas": {
-      "AccommodationRequestDto": {
+      "AccommodationCreate": {
         "required": [
           "address",
           "name",
+          "ownerId",
           "type"
         ],
         "type": "object",
@@ -654,6 +669,10 @@
           },
           "type": {
             "$ref": "#/components/schemas/AccommodationType"
+          },
+          "ownerId": {
+            "type": "integer",
+            "format": "int32"
           },
           "address": {
             "$ref": "#/components/schemas/AddressDto"
@@ -672,7 +691,7 @@
         "type": "integer",
         "format": "int32"
       },
-      "AccomodationDto": {
+      "AccommodationUpdate": {
         "required": [
           "address",
           "name",
