@@ -13,10 +13,10 @@ export function AccommodationCard(props: AccommodationCardProps){
         >
             {/* {product.img && <img src={product.img} alt={product.name} className="h-64 w-full object-cover"/>} */}
             <div className="flex justify-center items-center flex-col p-3 tect-xl font-bold">
-                <div>{accommodation.name}</div>
-                <div>{accommodation.type}</div>
+                <div className="text-purple-800">{accommodation.name}</div>
+                <div className="text-purple-400">{accommodation.type}</div>
             </div>
-            <p className="p-3">{accommodation.address?.city}</p>
+            <p className="p-3 text-center">{accommodation.address?.city}</p>
 
             <button
                 // onClick={() => props.onAddToCart(product)}
