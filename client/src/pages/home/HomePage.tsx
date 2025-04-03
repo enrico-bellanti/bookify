@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useAccommodationService } from "../../services/accommodation";
 import { HeroBanner } from "../../shared/components/core/HeroBanner";
 import { Search } from "../../shared/components/core/Search";
+import { TestPage } from "../test/TestPage";
 import { AccommodationCard } from "./components/AccommodationCard";
 
 export function HomePage(){
@@ -21,6 +22,7 @@ export function HomePage(){
                     </div>
                 </div>
             </div>
+            <TestPage></TestPage>
             <div className="p-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-16">
                     {
@@ -36,3 +38,5 @@ export function HomePage(){
         </>
     )
 }
+
+export default HomePage;

@@ -116,7 +116,7 @@ builder.Services.AddSwaggerGen(options =>
     {
         Title = "Bookify API",
         Version = "v1",
-        Description = "API per testare il back-end di Bookify"
+        Description = "API del back-end di Bookify"
     });
 
     // Definisci lo schema di sicurezza JWT

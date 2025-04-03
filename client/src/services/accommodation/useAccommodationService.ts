@@ -12,7 +12,7 @@ export function useAccommodationService() {
         dispatch({ type: 'pending', payload: true });
         try {
             const res = await AccommodationApi.apiAccommodationGet({
-                includes: 'Address'
+                // includes: 'Address'
             });
             dispatch({ type: 'accommodationsGetSuccess', payload: res.data.items || [] })
         } catch (e) {

@@ -6,7 +6,7 @@ import { createApiClient } from '../../open-api/api-client';
 //   basePath?: string;
 // }
 
-export function Test() {
+export function TestPage() {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [response, setResponse] = useState<string | null>(null);
@@ -73,4 +73,4 @@ export function Test() {
   );
 };
 
-export default Test;
+export default TestPage;
