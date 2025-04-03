@@ -1,17 +1,12 @@
-﻿using Bookify.Entities;
-using Microsoft.EntityFrameworkCore;
-using static Bookify.Entities.Accommodation;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using static Bookify.Entities.Accommodation;
 
-namespace Bookify.Dtos
+namespace Bookify.Dtos.Accommodation
 {
-    public class AccomodationDto
+    public class AccommodationCreate
     {
         public required string Name { get; set; }
         public required AccommodationType Type { get; set; }
-
         public required int OwnerId { get; set; }
-
         public required AddressDto Address { get; set; }
     }
 }

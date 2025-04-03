@@ -22,14 +22,17 @@ namespace Bookify.Repositories
         }
 
         public virtual async Task<PagedResult<TEntity>> GetAllAsync(
-            PageRequest pageRequest = null,
-            Expression<Func<TEntity, bool>> filter = null,
-            CancellationToken cancellationToken = default
-        )
+             PageRequest pageRequest = null,
+             Expression<Func<TEntity, bool>> filter = null,
+             CancellationToken cancellationToken = default,
+             params string[] includeProperties)
         {
             pageRequest ??= PageRequest.Of(0, 25);
 
             var query = _dbSet.AsQueryable();
+
+            // Apply includes for related entities
+            query = ApplyIncludes(query, includeProperties);
 
             // Apply filtering if provided
             if (filter != null)
@@ -59,9 +62,40 @@ namespace Bookify.Repositories
             };
         }
 
-        public virtual async Task<TEntity> GetByIdAsync(TKey id, CancellationToken cancellationToken = default)
+        public virtual async Task<TEntity> GetByIdAsync(
+            TKey id,
+            CancellationToken cancellationToken = default,
+            params string[] includeProperties)
         {
-            return await _dbSet.FindAsync(new object[] { id }, cancellationToken);
+            if (includeProperties == null || includeProperties.Length == 0)
+            {
+                return await _dbSet.FindAsync(new object[] { id }, cancellationToken);
+            }
+
+            // When includes are specified, we need a different approach since FindAsync doesn't support includes
+            var keyProperty = _context.Model.FindEntityType(typeof(TEntity))?.FindPrimaryKey()?.Properties.FirstOrDefault();
+            if (keyProperty == null)
+            {
+                throw new InvalidOperationException($"Primary key for entity {typeof(TEntity).Name} not found");
+            }
+
+            // Create parameter for the entity
+            var parameter = Expression.Parameter(typeof(TEntity), "e");
+            // Create a property access for the ID property
+            var property = Expression.Property(parameter, keyProperty.Name);
+            // Create a constant for the ID value
+            var constant = Expression.Constant(id);
+            // Create the equals expression
+            var equals = Expression.Equal(property, Expression.Convert(constant, keyProperty.ClrType));
+            // Create the lambda expression for the where clause
+            var lambda = Expression.Lambda<Func<TEntity, bool>>(equals, parameter);
+
+            // Build query with includes
+            var query = _dbSet.AsQueryable();
+            query = ApplyIncludes(query, includeProperties);
+
+            // Execute query with filter by id
+            return await query.SingleOrDefaultAsync(lambda, cancellationToken);
         }
 
         public virtual async Task<TEntity?> CreateAsync(TEntity entity, CancellationToken cancellationToken = default)
@@ -92,19 +126,29 @@ namespace Bookify.Repositories
 
         public virtual async Task<IEnumerable<TEntity>> FindAsync(
             Expression<Func<TEntity, bool>> predicate,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken = default,
+            params string[] includeProperties)
         {
-            return await _dbSet.Where(predicate).ToListAsync(cancellationToken);
+            var query = _dbSet.AsQueryable();
+            query = ApplyIncludes(query, includeProperties);
+            return await query.Where(predicate).ToListAsync(cancellationToken);
         }
 
         public virtual async Task<PagedResult<TEntity>> FindPagedAsync(
             Expression<Func<TEntity, bool>> predicate,
             PageRequest pageRequest = null,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken = default,
+            params string[] includeProperties)
         {
             pageRequest ??= PageRequest.Of(0, 25);
 
-            var query = _dbSet.Where(predicate);
+            var query = _dbSet.AsQueryable();
+
+            // Apply includes for related entities
+            query = ApplyIncludes(query, includeProperties);
+
+            // Apply predicate
+            query = query.Where(predicate);
 
             // Get total count before applying pagination
             var totalCount = await query.CountAsync(cancellationToken);
@@ -130,9 +174,12 @@ namespace Bookify.Repositories
 
         public virtual async Task<TEntity> SingleOrDefaultAsync(
             Expression<Func<TEntity, bool>> predicate,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken = default,
+            params string[] includeProperties)
         {
-            return await _dbSet.SingleOrDefaultAsync(predicate, cancellationToken);
+            var query = _dbSet.AsQueryable();
+            query = ApplyIncludes(query, includeProperties);
+            return await query.SingleOrDefaultAsync(predicate, cancellationToken);
         }
 
         public virtual async Task<bool> AnyAsync(
@@ -174,6 +221,25 @@ namespace Bookify.Repositories
                 Expression.Quote(lambda));
 
             return query.Provider.CreateQuery<TEntity>(resultExpression);
+        }
+
+        /// <summary>
+        /// Applies includes for related entities
+        /// </summary>
+        protected virtual IQueryable<TEntity> ApplyIncludes(IQueryable<TEntity> query, params string[] includeProperties)
+        {
+            if (includeProperties == null)
+                return query;
+
+            foreach (var includeProperty in includeProperties)
+            {
+                if (!string.IsNullOrWhiteSpace(includeProperty))
+                {
+                    query = query.Include(includeProperty);
+                }
+            }
+
+            return query;
         }
     }
 }

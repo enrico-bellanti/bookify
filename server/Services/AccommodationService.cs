@@ -1,9 +1,8 @@
 ﻿using Bookify.Data;
 using Bookify.Data.Pagination;
-using Bookify.Dtos;
+using Bookify.Dtos.Accommodation;
 using Bookify.Entities;
 using Bookify.Repositories;
-using Microsoft.EntityFrameworkCore;
 namespace Bookify.Services
 {
     public class AccommodationService : IAccommodationService
@@ -20,44 +19,109 @@ namespace Bookify.Services
             _userRepository = userRepository;
         }
 
-        public async Task<PagedResult<Accommodation>> GetAllAccommodations(
-            string userUuid = null,
+        // Public method that can accept include parameters
+        public async Task<PagedResult<AccommodationDto>> GetPagedAccommodationsAsync(
             int page = 0,
             int size = 25,
             string sortBy = "Id",
-            bool isDescending = false
-        )
+            bool isDescending = false,
+            params string[] includes)
+        {
+            var accommodationsResult = await GetAllAccommodations(
+                page,
+                size,
+                sortBy,
+                isDescending,
+                includes
+            );
+
+            // Convert items to DTOs
+            var dtoItems = accommodationsResult.Items.Select(accommodation =>
+                new AccommodationDto(accommodation)).ToList();
+
+            // Create a new PagedResult with DTOs
+            return new PagedResult<AccommodationDto>
+            {
+                Items = dtoItems,
+                TotalCount = accommodationsResult.TotalCount,
+                PageNumber = accommodationsResult.PageNumber,
+                PageSize = accommodationsResult.PageSize
+            };
+        }
+
+        private async Task<PagedResult<Accommodation>> GetAllAccommodations(
+            int page = 0,
+            int size = 25,
+            string sortBy = "Id",
+            bool isDescending = false,
+            params string[] includes)
         {
             var sortDirection = isDescending ? SortDirection.DESC : SortDirection.ASC;
             var sort = Sort.By(sortDirection, sortBy);
             var pageRequest = PageRequest.Of(page, size, sort);
 
-            if (userUuid != null)
-            {
-                // Parse the string UUID to a valid GUID
-                if (!Guid.TryParse(userUuid, out Guid userGuid))
-                {
-                    throw new ArgumentException("Invalid UUID format");
-                }
-                var user = await _accommodationRepository.SingleOrDefaultAsync(u => u.Uuid == userGuid);
-                if (user == null)
-                {
-                    throw new KeyNotFoundException($"User with UUID {userUuid} not found");
-                }
-                return await _accommodationRepository.GetAllAsync(
-                    pageRequest,
-                    filter: b => b.OwnerId == user.Id
-                );
-            }
-            return await _accommodationRepository.GetAllAsync(pageRequest);
+            //if (userUuid != null)
+            //{
+            //    // Parse the string UUID to a valid GUID
+            //    if (!Guid.TryParse(userUuid, out Guid userGuid))
+            //    {
+            //        throw new ArgumentException("Invalid UUID format");
+            //    }
+            //    var user = await _userRepository.SingleOrDefaultAsync(u => u.Uuid == userGuid);
+            //    if (user == null)
+            //    {
+            //        throw new KeyNotFoundException($"User with UUID {userUuid} not found");
+            //    }
+            //    return await _accommodationRepository.GetAllAsync(
+            //        pageRequest,
+            //        filter: b => b.OwnerId == user.Id,
+            //        includeProperties: includes
+            //    );
+            //}
+
+            // Using the new repository method with includes instead of the specific GetAllWithAddressAsync
+            return await _accommodationRepository.GetAllAsync(
+                pageRequest,
+                filter: null,
+                cancellationToken: default,
+                includeProperties: includes
+            );
         }
 
-        public async Task<Accommodation?> GetAccommodationByID(int id)
+        public async Task<AccommodationDto?> GetAccommodationByIdAsync(int id, params string[] includes)
         {
-            return await _accommodationRepository.SingleOrDefaultAsync(booking => booking.Id == id);
+            var accommodation = await GetAccommodationByID(id, includes);
+            if (accommodation == null)
+            {
+                return null;
+            }
+            return new AccommodationDto(accommodation);
         }
 
-        public async Task<Accommodation?> AddAccommodation(AccomodationDto obj)
+        private async Task<Accommodation?> GetAccommodationByID(int id, params string[] includes)
+        {
+            // More efficient than SingleOrDefaultAsync with a predicate when fetching by primary key
+            return await _accommodationRepository.GetByIdAsync(id, default, includes);
+
+            // Alternative approach if you prefer to use the predicate version
+            // return await _accommodationRepository.SingleOrDefaultAsync(
+            //     accommodation => accommodation.Id == id, 
+            //     default,
+            //     includes);
+        }
+
+        public async Task<AccommodationDto?> AddAccommodationAsync(AccommodationCreate obj)
+        {
+            var accommodation = await AddAccommodation(obj);
+            if (accommodation == null)
+            {
+                return null;
+            }
+
+            return new AccommodationDto(accommodation);
+        }
+
+        private async Task<Accommodation?> AddAccommodation(AccommodationCreate obj)
         {
             // Create address from DTO
             var address = new Address
@@ -88,7 +152,18 @@ namespace Bookify.Services
             return await _accommodationRepository.CreateAsync(accommodation);
         }
 
-        public async Task<Accommodation?> UpdateAccommodation(int id, AccomodationDto obj)
+        public async Task<AccommodationDto?> UpdateAccommodationAsync(int id, AccommodationUpdate obj)
+        {
+            var accommodation = await UpdateAccommodation(id, obj);
+            if (accommodation == null)
+            {
+                return null;
+            }
+
+            return new AccommodationDto(accommodation);
+        }
+
+        private async Task<Accommodation?> UpdateAccommodation(int id, AccommodationUpdate obj)
         {
             // Find existing accommodation with address
             var accommodation = await _accommodationRepository.SingleOrDefaultAsync(accommodation => accommodation.Id == id);
@@ -148,7 +223,7 @@ namespace Bookify.Services
             return await _accommodationRepository.UpdateAsync(accommodation);
         }
 
-        public async Task<bool> DeleteAccommodationByID(int id)
+        public async Task<bool> DeleteAccommodationByIdAsync(int id)
         {
             var accommodation = await _accommodationRepository.SingleOrDefaultAsync(a => a.Id == id);
             if (accommodation == null)

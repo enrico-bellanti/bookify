@@ -1,5 +1,8 @@
-﻿using Bookify.Data;
+﻿using System.Linq.Expressions;
+using Bookify.Data;
+using Bookify.Data.Pagination;
 using Bookify.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace Bookify.Repositories
 {
