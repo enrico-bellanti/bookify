@@ -8,11 +8,11 @@ namespace Bookify.Entities
     {
         public enum AccommodationType
         {
-            Hotel = 1,
-            Apartment = 2,
-            Resort = 3,
-            Villa = 4,
-            Hostel = 5,
+            Hotel,
+            Apartment,
+            Resort,
+            Villa,
+            Hostel,
         }
         public Accommodation()
         {

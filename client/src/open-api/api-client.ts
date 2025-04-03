@@ -1,7 +1,8 @@
 import { AccommodationApi, AddressApi, Configuration, TestApi } from './src/api';
 
 // URL hardcoded dell'API - da usare quando process.env non è disponibile
-const API_BASE_URL = "https://proxy-production-197b.up.railway.app";
+const API_BASE_URL = "https://bookify-production-ba68.up.railway.app";
+// const API_BASE_URL = "https://proxy-production-197b.up.railway.app";
 
 export function createApiClient(basePath = API_BASE_URL) {
     const config = new Configuration({
