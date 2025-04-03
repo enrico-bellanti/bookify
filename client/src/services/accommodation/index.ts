@@ -1,0 +1,1 @@
+export { useAccommodationService } from './useAccommodationService';

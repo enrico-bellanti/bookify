@@ -17,15 +17,15 @@
 /**
  * 
  * @export
- * @enum {number}
+ * @enum {string}
  */
 
 export const AccommodationType = {
-    NUMBER_1: 1,
-    NUMBER_2: 2,
-    NUMBER_3: 3,
-    NUMBER_4: 4,
-    NUMBER_5: 5
+    Hotel: 'Hotel',
+    Apartment: 'Apartment',
+    Resort: 'Resort',
+    Villa: 'Villa',
+    Hostel: 'Hostel'
 } as const;
 
 export type AccommodationType = typeof AccommodationType[keyof typeof AccommodationType];

@@ -868,13 +868,14 @@
       },
       "AccommodationType": {
         "enum": [
-          "Hotel",
-          "Apartment",
-          "Resort",
-          "Villa",
-          "Hostel"
+          1,
+          2,
+          3,
+          4,
+          5
         ],
-        "type": "string"
+        "type": "integer",
+        "format": "int32"
       },
       "AccommodationUpdate": {
         "required": [
@@ -1157,12 +1158,13 @@
       },
       "BookingStatus": {
         "enum": [
-          "Pending",
-          "Confirmed",
-          "Completed",
-          "Cancelled"
+          1,
+          2,
+          3,
+          4
         ],
-        "type": "string"
+        "type": "integer",
+        "format": "int32"
       },
       "UpdateUserDto": {
         "type": "object",
@@ -1256,8 +1258,8 @@
         "type": "oauth2",
         "flows": {
           "password": {
-            "authorizationUrl": "http://localhost:8080/realms/bookify/protocol/openid-connect/auth",
-            "tokenUrl": "http://localhost:8080/realms/bookify/protocol/openid-connect/token",
+            "authorizationUrl": "https://keycloak-production-b4d5.up.railway.app/realms/bookify/protocol/openid-connect/auth",
+            "tokenUrl": "https://keycloak-production-b4d5.up.railway.app/realms/bookify/protocol/openid-connect/token",
             "scopes": {
               "openid": "OpenID Connect scope",
               "profile": "Profile information",
@@ -1265,8 +1267,8 @@
             }
           },
           "authorizationCode": {
-            "authorizationUrl": "http://localhost:8080/realms/bookify/protocol/openid-connect/auth",
-            "tokenUrl": "http://localhost:8080/realms/bookify/protocol/openid-connect/token",
+            "authorizationUrl": "https://keycloak-production-b4d5.up.railway.app/realms/bookify/protocol/openid-connect/auth",
+            "tokenUrl": "https://keycloak-production-b4d5.up.railway.app/realms/bookify/protocol/openid-connect/token",
             "scopes": {
               "openid": "OpenID Connect scope",
               "profile": "Profile information",

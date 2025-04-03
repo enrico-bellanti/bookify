@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { useState } from 'react';
-import { createApiClient } from './../../api-client';
+import { createApiClient } from '../../open-api/api-client';
 
 // interface TestComponentProps {
 //   basePath?: string;

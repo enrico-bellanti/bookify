@@ -1,49 +1,49 @@
-import { AccomodationDto } from "../../open-api/src/api";
+import { AccommodationDto } from "../../open-api/src/api";
 import { AccommodationActions } from "./accommodation.actions";
 
 export interface AccomodationState {
-    products: AccomodationDto[];
+    accommodations: AccommodationDto[];
     pending: boolean;
     error: string | null
-    activeItem: Partial<AccomodationDto> | null
+    activeItem: Partial<AccommodationDto> | null
 }
 export const initialState: AccomodationState = {
-    products: [],
+    accommodations: [],
     pending: false,
     error: null,
     activeItem: null
 };
 
-export function productsReducer(state: AccomodationState, action: AccommodationActions) {
+export function accommodationReducer(state: AccomodationState, action: AccommodationActions) {
     const { type, payload } = action;
 
     switch (type) {
         case 'accommodationsGetSuccess':
-            return { ...state, products: payload, pending: false, error: null }
-        // case 'accommodationDeleteSuccess':
-        //     return {
-        //         ...state,
-        //         products: state.products.filter(item => item.id !== payload),
-        //         error: null,
-        //         pending: false,
-        //         activeItem: null,
-        //     };
-        // case 'accommodationAddSuccess':
-        //     return {
-        //         ...state,
-        //         products: [...state.products, payload],
-        //         activeItem: null,
-        //         error: null,
-        //         pending: false
-        //     };
-        // case 'accommodationEditSuccess':
-        //     return {
-        //         ...state,
-        //         products: state.products.map(item => item.id === payload.id ? payload : item),
-        //         activeItem: null,
-        //         error: null,
-        //         pending: false,
-        //     };
+            return { ...state, accommodations: payload, pending: false, error: null }
+        case 'accommodationDeleteSuccess':
+            return {
+                ...state,
+                accommodations: state.accommodations.filter(item => item.id !== payload),
+                error: null,
+                pending: false,
+                activeItem: null,
+            };
+        case 'accommodationAddSuccess':
+            return {
+                ...state,
+                accommodations: [...state.accommodations, payload],
+                activeItem: null,
+                error: null,
+                pending: false
+            };
+        case 'accommodationEditSuccess':
+            return {
+                ...state,
+                accommodations: state.accommodations.map(item => item.id === payload.id ? payload : item),
+                activeItem: null,
+                error: null,
+                pending: false,
+            };
         case 'accommodationSetActive':
             return { ...state, activeItem: payload }
         case 'pending':

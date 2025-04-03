@@ -24,6 +24,10 @@ import { BASE_PATH, COLLECTION_FORMATS, type RequestArgs, BaseAPI, RequiredError
 // @ts-ignore
 import type { AccommodationCreate } from '../models';
 // @ts-ignore
+import type { AccommodationDto } from '../models';
+// @ts-ignore
+import type { AccommodationDtoPagedResult } from '../models';
+// @ts-ignore
 import type { AccommodationUpdate } from '../models';
 /**
  * AccommodationApi - axios parameter creator
@@ -286,7 +290,7 @@ export const AccommodationApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiAccommodationGet(page?: number, size?: number, sortBy?: string, isDescending?: boolean, includes?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+        async apiAccommodationGet(page?: number, size?: number, sortBy?: string, isDescending?: boolean, includes?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AccommodationDtoPagedResult>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.apiAccommodationGet(page, size, sortBy, isDescending, includes, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['AccommodationApi.apiAccommodationGet']?.[localVarOperationServerIndex]?.url;
@@ -311,7 +315,7 @@ export const AccommodationApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiAccommodationIdGet(id: number, includes?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+        async apiAccommodationIdGet(id: number, includes?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AccommodationDto>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.apiAccommodationIdGet(id, includes, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['AccommodationApi.apiAccommodationIdGet']?.[localVarOperationServerIndex]?.url;
@@ -324,7 +328,7 @@ export const AccommodationApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiAccommodationIdPut(id: number, accommodationUpdate?: AccommodationUpdate, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+        async apiAccommodationIdPut(id: number, accommodationUpdate?: AccommodationUpdate, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AccommodationDto>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.apiAccommodationIdPut(id, accommodationUpdate, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['AccommodationApi.apiAccommodationIdPut']?.[localVarOperationServerIndex]?.url;
@@ -336,7 +340,7 @@ export const AccommodationApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiAccommodationPost(accommodationCreate?: AccommodationCreate, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+        async apiAccommodationPost(accommodationCreate?: AccommodationCreate, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AccommodationDto>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.apiAccommodationPost(accommodationCreate, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['AccommodationApi.apiAccommodationPost']?.[localVarOperationServerIndex]?.url;
@@ -358,7 +362,7 @@ export const AccommodationApiFactory = function (configuration?: Configuration, 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiAccommodationGet(requestParameters: AccommodationApiApiAccommodationGetRequest = {}, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+        apiAccommodationGet(requestParameters: AccommodationApiApiAccommodationGetRequest = {}, options?: RawAxiosRequestConfig): AxiosPromise<AccommodationDtoPagedResult> {
             return localVarFp.apiAccommodationGet(requestParameters.page, requestParameters.size, requestParameters.sortBy, requestParameters.isDescending, requestParameters.includes, options).then((request) => request(axios, basePath));
         },
         /**
@@ -376,7 +380,7 @@ export const AccommodationApiFactory = function (configuration?: Configuration, 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiAccommodationIdGet(requestParameters: AccommodationApiApiAccommodationIdGetRequest, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+        apiAccommodationIdGet(requestParameters: AccommodationApiApiAccommodationIdGetRequest, options?: RawAxiosRequestConfig): AxiosPromise<AccommodationDto> {
             return localVarFp.apiAccommodationIdGet(requestParameters.id, requestParameters.includes, options).then((request) => request(axios, basePath));
         },
         /**
@@ -385,7 +389,7 @@ export const AccommodationApiFactory = function (configuration?: Configuration, 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiAccommodationIdPut(requestParameters: AccommodationApiApiAccommodationIdPutRequest, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+        apiAccommodationIdPut(requestParameters: AccommodationApiApiAccommodationIdPutRequest, options?: RawAxiosRequestConfig): AxiosPromise<AccommodationDto> {
             return localVarFp.apiAccommodationIdPut(requestParameters.id, requestParameters.accommodationUpdate, options).then((request) => request(axios, basePath));
         },
         /**
@@ -394,7 +398,7 @@ export const AccommodationApiFactory = function (configuration?: Configuration, 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiAccommodationPost(requestParameters: AccommodationApiApiAccommodationPostRequest = {}, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+        apiAccommodationPost(requestParameters: AccommodationApiApiAccommodationPostRequest = {}, options?: RawAxiosRequestConfig): AxiosPromise<AccommodationDto> {
             return localVarFp.apiAccommodationPost(requestParameters.accommodationCreate, options).then((request) => request(axios, basePath));
         },
     };
@@ -413,7 +417,7 @@ export interface AccommodationApiInterface {
      * @throws {RequiredError}
      * @memberof AccommodationApiInterface
      */
-    apiAccommodationGet(requestParameters?: AccommodationApiApiAccommodationGetRequest, options?: RawAxiosRequestConfig): AxiosPromise<void>;
+    apiAccommodationGet(requestParameters?: AccommodationApiApiAccommodationGetRequest, options?: RawAxiosRequestConfig): AxiosPromise<AccommodationDtoPagedResult>;
 
     /**
      * 
@@ -431,7 +435,7 @@ export interface AccommodationApiInterface {
      * @throws {RequiredError}
      * @memberof AccommodationApiInterface
      */
-    apiAccommodationIdGet(requestParameters: AccommodationApiApiAccommodationIdGetRequest, options?: RawAxiosRequestConfig): AxiosPromise<void>;
+    apiAccommodationIdGet(requestParameters: AccommodationApiApiAccommodationIdGetRequest, options?: RawAxiosRequestConfig): AxiosPromise<AccommodationDto>;
 
     /**
      * 
@@ -440,7 +444,7 @@ export interface AccommodationApiInterface {
      * @throws {RequiredError}
      * @memberof AccommodationApiInterface
      */
-    apiAccommodationIdPut(requestParameters: AccommodationApiApiAccommodationIdPutRequest, options?: RawAxiosRequestConfig): AxiosPromise<void>;
+    apiAccommodationIdPut(requestParameters: AccommodationApiApiAccommodationIdPutRequest, options?: RawAxiosRequestConfig): AxiosPromise<AccommodationDto>;
 
     /**
      * 
@@ -449,7 +453,7 @@ export interface AccommodationApiInterface {
      * @throws {RequiredError}
      * @memberof AccommodationApiInterface
      */
-    apiAccommodationPost(requestParameters?: AccommodationApiApiAccommodationPostRequest, options?: RawAxiosRequestConfig): AxiosPromise<void>;
+    apiAccommodationPost(requestParameters?: AccommodationApiApiAccommodationPostRequest, options?: RawAxiosRequestConfig): AxiosPromise<AccommodationDto>;
 
 }
 

@@ -17,14 +17,14 @@
 /**
  * 
  * @export
- * @enum {number}
+ * @enum {string}
  */
 
 export const BookingStatus = {
-    NUMBER_1: 1,
-    NUMBER_2: 2,
-    NUMBER_3: 3,
-    NUMBER_4: 4
+    Pending: 'Pending',
+    Confirmed: 'Confirmed',
+    Completed: 'Completed',
+    Cancelled: 'Cancelled'
 } as const;
 
 export type BookingStatus = typeof BookingStatus[keyof typeof BookingStatus];

@@ -1,6 +1,5 @@
 .gitignore
 .npmignore
-.openapi-generator-ignore
 api.ts
 api/accommodation-api.ts
 api/address-api.ts
@@ -13,12 +12,18 @@ configuration.ts
 git_push.sh
 index.ts
 models/accommodation-create.ts
+models/accommodation-dto-paged-result.ts
+models/accommodation-dto.ts
 models/accommodation-type.ts
 models/accommodation-update.ts
+models/accommodation.ts
 models/add-user-request-dto.ts
 models/address-dto.ts
+models/address.ts
 models/booking-dto.ts
 models/booking-request-dto.ts
 models/booking-status.ts
+models/booking.ts
 models/index.ts
 models/update-user-dto.ts
+models/user.ts
