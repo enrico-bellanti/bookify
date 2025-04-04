@@ -23,6 +23,8 @@ namespace Bookify.Entities
         public Guid Uuid { get; set; }
         public required string Name { get; set; }
         public AccommodationType Type { get; set; }
+        public required string ImgUrl { get; set; }
+
         // Proprietario dell'accommodation
         public int OwnerId { get; set; }
 

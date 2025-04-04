@@ -28,14 +28,6 @@ namespace Bookify.Controllers
             _userService = userService;
         }
 
-        // Helper method to parse the includes parameter
-        private string[] ParseIncludes(string includes)
-        {
-            return string.IsNullOrEmpty(includes)
-                ? Array.Empty<string>()
-                : includes.Split(',', StringSplitOptions.RemoveEmptyEntries);
-        }
-
         [HttpGet]
         public async Task<ActionResult<PagedResult<AccommodationDto>>> Get(
             [FromQuery] int? page = null,
@@ -72,7 +64,7 @@ namespace Bookify.Controllers
                 size ?? 25,
                 sortBy ?? "Id",
                 isDescending ?? false,
-                ParseIncludes(includes)
+                QueryHelper.ParseIncludes(includes)
             ));
         }
 
@@ -80,46 +72,49 @@ namespace Bookify.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<AccommodationDto>> Get(int id, [FromQuery] string includes = null)
         {
-            var userUuid = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (userUuid == null)
-            {
-                return Unauthorized();
-            }
+            //var userUuid = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            //if (userUuid == null)
+            //{
+            //    return Unauthorized();
+            //}
             // Get the accommodation DTO with any requested includes
+            //var accommodationDto = await _accommodationService.GetAccommodationByIdAsync(id, QueryHelper.ParseIncludes(includes));
+            //if (accommodationDto == null)
+            //{
+            //    return NotFound();
+            //}
+            //// Check if user is admin
+            //string[] userRoles = User.FindAll(ClaimTypes.Role)
+            //                       .Select(claim => claim.Value)
+            //                       .ToArray();
+            //var requiredRoles = new[] { "help-desk" };
+            //var isAdmin = _keycloakUserService.CompareUserRoles(requiredRoles, userRoles);
+            //// If admin, return the DTO directly
+            //if (isAdmin)
+            //{
+            //    return accommodationDto; // You can return the type directly
+            //}
+            //// Get the current user
+            //var user = await _userService.GetUserByUuid(userUuid);
+            //if (user == null)
+            //{
+            //    return Unauthorized(); // User not found in the system
+            //}
+            //// Check if user is the owner of the accommodation
+            //var isOwner = accommodationDto.OwnerId == user.Id;
+            //// Only allow access if user is owner
+            //if (!isOwner)
+            //{
+            //    return Forbid(); // Return 403 Forbidden status code
+            //}
             var accommodationDto = await _accommodationService.GetAccommodationByIdAsync(id, QueryHelper.ParseIncludes(includes));
-            if (accommodationDto == null)
-            {
-                return NotFound();
-            }
-            // Check if user is admin
-            string[] userRoles = User.FindAll(ClaimTypes.Role)
-                                   .Select(claim => claim.Value)
-                                   .ToArray();
-            var requiredRoles = new[] { "help-desk" };
-            var isAdmin = _keycloakUserService.CompareUserRoles(requiredRoles, userRoles);
-            // If admin, return the DTO directly
-            if (isAdmin)
-            {
-                return accommodationDto; // You can return the type directly
-            }
-            // Get the current user
-            var user = await _userService.GetUserByUuid(userUuid);
-            if (user == null)
-            {
-                return Unauthorized(); // User not found in the system
-            }
-            // Check if user is the owner of the accommodation
-            var isOwner = accommodationDto.OwnerId == user.Id;
-            // Only allow access if user is owner
-            if (!isOwner)
-            {
-                return Forbid(); // Return 403 Forbidden status code
-            }
-            return accommodationDto; // You can return the type directly
+            return Ok(accommodationDto);
         }
 
         [HttpPost]
-        public async Task<ActionResult<AccommodationDto>> Post([FromBody] AccommodationCreate accommodationCreate)
+        [Authorize]
+        [Consumes("multipart/form-data")]
+        public async Task<ActionResult<AccommodationDto>> Post([FromForm] AccommodationCreate accommodationCreate)
         {
             var userUuid = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (userUuid == null)
@@ -134,13 +129,9 @@ namespace Bookify.Controllers
                 return NotFound("User not found");
             }
 
-            // Imposta l'ID del proprietario al posto di usare quello che arriva dal client
-            // (questo garantisce che l'accommodation sia sempre associata all'utente autenticato)
-            accommodationCreate.OwnerId = user.Id;
-
             try
             {
-                var newAccommodation = await _accommodationService.AddAccommodationAsync(accommodationCreate);
+                var newAccommodation = await _accommodationService.AddAccommodationAsync(accommodationCreate, user.Id);
                 return Ok(newAccommodation);
             }
             catch (KeyNotFoundException ex)
@@ -154,6 +145,7 @@ namespace Bookify.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<ActionResult<AccommodationDto>> Put(int id, [FromBody] AccommodationUpdate accommodationUpdate)
         {
             var userUuid = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -162,18 +154,18 @@ namespace Bookify.Controllers
                 return Unauthorized();
             }
 
-            // First check if accommodation exists
-            var existingAccommodation = await _accommodationService.GetAccommodationByIdAsync(id);
-            if (existingAccommodation == null)
-            {
-                return NotFound();
-            }
-
             // Get the current user
             var user = await _userService.GetUserByUuid(userUuid);
             if (user == null)
             {
                 return NotFound("User not found");
+            }
+
+            // First check if accommodation exists
+            var existingAccommodation = await _accommodationService.GetAccommodationByIdAsync(id);
+            if (existingAccommodation == null)
+            {
+                return NotFound();
             }
 
             string[] userRoles = User.FindAll(ClaimTypes.Role)
@@ -211,6 +203,7 @@ namespace Bookify.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<IActionResult> Delete(int id)
         {
             var userUuid = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -244,7 +237,7 @@ namespace Bookify.Controllers
             var isOwner = accommodation.OwnerId == user.Id;
 
             // Only allow deletion if user is admin or owner
-            if (!isAdmin || !isOwner)
+            if (!isAdmin && !isOwner)
             {
                 return Forbid(); // Return 403 Forbidden status code
             }

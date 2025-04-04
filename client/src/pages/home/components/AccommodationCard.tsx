@@ -11,7 +11,7 @@ export function AccommodationCard(props: AccommodationCardProps){
         <div 
             className="bg-white rounded-xl overflow-hidden text-black shadow-2xl border-2 border-purple-800"
         >
-            {/* {product.img && <img src={product.img} alt={product.name} className="h-64 w-full object-cover"/>} */}
+            {accommodation.imgUrl && <img src={accommodation.imgUrl} alt={accommodation.name || 'accommodation picture'} className="h-64 w-full object-cover"/>}
             <div className="flex justify-center items-center flex-col p-3 tect-xl font-bold">
                 <div className="text-purple-800">{accommodation.name}</div>
                 <div className="text-purple-400">{accommodation.type}</div>

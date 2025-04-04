@@ -21,8 +21,7 @@ export function HomePage(){
                     </div>
                 </div>
             </div>
-            {/* <TestPage></TestPage> */}
-            <div className="p-4">
+            <div className="max-w-screen-lg mx-auto p-10">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-16">
                     {
                         state.accommodations.map(a => (

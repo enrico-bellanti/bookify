@@ -15,6 +15,7 @@ namespace Bookify.Dtos.Accommodation
             Id = accommodation.Id;
             Uuid = accommodation.Uuid;
             Name = accommodation.Name;
+            ImgUrl = accommodation.ImgUrl;
             Type = accommodation.Type;
             OwnerId = accommodation.OwnerId;
             Address = accommodation.Address;
@@ -24,9 +25,10 @@ namespace Bookify.Dtos.Accommodation
         public int Id { get; set; }
         public Guid Uuid { get; set; }
         public string Name { get; set; }
+        public string ImgUrl { get; set; }
         public AccommodationType Type { get; set; }
         public int OwnerId { get; set; }
-        public Address? Address { get; set; }
+        public Address Address { get; set; }
         public ICollection<Booking> Bookings { get; set; } = new List<Booking>();
     }
 }

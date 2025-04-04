@@ -3,20 +3,25 @@ using Bookify.Data.Pagination;
 using Bookify.Dtos.Accommodation;
 using Bookify.Entities;
 using Bookify.Repositories;
+using CloudinaryDotNet;
+using CloudinaryDotNet.Actions;
 namespace Bookify.Services
 {
     public class AccommodationService : IAccommodationService
     {
         private readonly IAccommodationRepository _accommodationRepository;
         private readonly IUserRepository _userRepository;
+        private readonly Cloudinary _cloudinary;
 
         public AccommodationService(
             IAccommodationRepository accommodationRepository, 
-            IUserRepository userRepository
+            IUserRepository userRepository,
+            Cloudinary cloudinary
         )
         {
             _accommodationRepository = accommodationRepository;
             _userRepository = userRepository;
+            _cloudinary = cloudinary;
         }
 
         // Public method that can accept include parameters
@@ -110,9 +115,9 @@ namespace Bookify.Services
             //     includes);
         }
 
-        public async Task<AccommodationDto?> AddAccommodationAsync(AccommodationCreate obj)
+        public async Task<AccommodationDto?> AddAccommodationAsync(AccommodationCreate obj, int ownerId)
         {
-            var accommodation = await AddAccommodation(obj);
+            var accommodation = await AddAccommodation(obj, ownerId);
             if (accommodation == null)
             {
                 return null;
@@ -121,7 +126,7 @@ namespace Bookify.Services
             return new AccommodationDto(accommodation);
         }
 
-        private async Task<Accommodation?> AddAccommodation(AccommodationCreate obj)
+        private async Task<Accommodation?> AddAccommodation(AccommodationCreate obj, int ownerId)
         {
             // Create address from DTO
             var address = new Address
@@ -137,12 +142,32 @@ namespace Bookify.Services
                 Longitude = obj.Address.Longitude
             };
 
+            var file = obj.ImgFile;
+
+            var uploadParams = new ImageUploadParams
+            {
+                File = new FileDescription(file.FileName, file.OpenReadStream()),
+                UseFilename = true,
+                UniqueFilename = false,
+                Overwrite = true
+            };
+
+            var uploadResult = await _cloudinary.UploadAsync(uploadParams);
+
+            if (uploadResult == null)
+            {
+                return null;
+            }
+
+            var imgUrl = uploadResult.SecureUrl.ToString();
+
             // Create new accommodation from DTO
             var accommodation = new Accommodation
             {
                 Name = obj.Name,
                 Type = obj.Type,
-                OwnerId = obj.OwnerId,
+                ImgUrl = imgUrl,
+                OwnerId = ownerId,
                 Address = address,
                 //CreatedAt = DateTime.UtcNow,
                 //UpdatedAt = DateTime.UtcNow
@@ -173,18 +198,8 @@ namespace Bookify.Services
                 return null;
             }
 
-            // Validate owner exists if changing owner
-            if (obj.OwnerId != accommodation.OwnerId)
-            {
-                var owner = await _userRepository.SingleOrDefaultAsync(u => u.Id == obj.OwnerId);
-                if (owner == null)
-                {
-                    throw new KeyNotFoundException($"Owner with ID {obj.OwnerId} not found");
-                }
-            }
-
             // Update address properties
-            if (accommodation.Address != null)
+            if (obj.Address != null)
             {
                 accommodation.Address.Street = obj.Address.Street;
                 accommodation.Address.Number = obj.Address.Number;
@@ -196,27 +211,33 @@ namespace Bookify.Services
                 accommodation.Address.Latitude = obj.Address.Latitude;
                 accommodation.Address.Longitude = obj.Address.Longitude;
             }
-            else
-            {
-                // Create new address if none exists
-                accommodation.Address = new Address
-                {
-                    Street = obj.Address.Street,
-                    Number = obj.Address.Number,
-                    City = obj.Address.City,
-                    Province = obj.Address.Province,
-                    PostalCode = obj.Address.PostalCode,
-                    Country = obj.Address.Country,
-                    AdditionalInfo = obj.Address.AdditionalInfo,
-                    Latitude = obj.Address.Latitude,
-                    Longitude = obj.Address.Longitude
-                };
-            }
 
             // Update accommodation properties
             accommodation.Name = obj.Name;
             accommodation.Type = obj.Type;
-            accommodation.OwnerId = obj.OwnerId;
+
+            if (obj.ImgFile != null)
+            {
+                var file = obj.ImgFile;
+
+                var uploadParams = new ImageUploadParams
+                {
+                    File = new FileDescription(file.FileName, file.OpenReadStream()),
+                    UseFilename = true,
+                    UniqueFilename = false,
+                    Overwrite = true
+                };
+
+                var uploadResult = await _cloudinary.UploadAsync(uploadParams);
+
+                if (uploadResult == null)
+                {
+                    return null;
+                }
+
+                var imgUrl = uploadResult.SecureUrl.ToString();
+                accommodation.ImgUrl = imgUrl;
+            }
             //accommodation.UpdatedAt = DateTime.UtcNow;
 
             // Save changes

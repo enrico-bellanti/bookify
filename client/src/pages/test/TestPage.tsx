@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { useState } from 'react';
-import { createApiClient } from '../../open-api/api-client';
+import { useApiClient } from '../../api/api-client';
 
 // interface TestComponentProps {
 //   basePath?: string;
@@ -12,7 +12,7 @@ export function TestPage() {
   const [response, setResponse] = useState<string | null>(null);
   
   // Utilizzo di createApiClient per ottenere l'istanza di TestApi
-  const apiClient = createApiClient();
+  const apiClient = useApiClient();
   
   const handleTestCall = async () => {
     setLoading(true);

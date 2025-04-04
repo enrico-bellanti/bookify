@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using static Bookify.Repositories.IRepository;
+using CloudinaryDotNet;
+using CloudinaryDotNet.Actions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -202,6 +204,13 @@ builder.Services.AddControllers()
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHttpClient();
+
+//Cloudinary cloudinary = new Cloudinary(Environment.GetEnvironmentVariable("CLOUDINARY_URL"));
+builder.Services.AddSingleton<Cloudinary>(sp => {
+    Cloudinary cloudinary = new Cloudinary(builder.Configuration["Cloudinary:BaseUrl"]);
+    cloudinary.Api.Secure = true;
+    return cloudinary;
+});
 
 var app = builder.Build();
 

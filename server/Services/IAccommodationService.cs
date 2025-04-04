@@ -15,7 +15,7 @@ namespace Bookify.Services
         Task<AccommodationDto> GetAccommodationByIdAsync(
             int id,
             params string[] includes);
-        Task<AccommodationDto?> AddAccommodationAsync(AccommodationCreate obj);
+        Task<AccommodationDto?> AddAccommodationAsync(AccommodationCreate obj, int ownerId);
         Task<AccommodationDto?> UpdateAccommodationAsync(int id, AccommodationUpdate obj);
         Task<bool> DeleteAccommodationByIdAsync(int id);
     }

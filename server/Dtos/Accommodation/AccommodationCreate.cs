@@ -6,7 +6,7 @@ namespace Bookify.Dtos.Accommodation
     {
         public required string Name { get; set; }
         public required AccommodationType Type { get; set; }
-        public required int OwnerId { get; set; }
+        public required IFormFile ImgFile { get; set; }
         public required AddressDto Address { get; set; }
     }
 }
