@@ -15,7 +15,7 @@ export function Search({ onSearch }: SearchProps) {
         }
     };
     
-    const handleKeyPress = (e) => {
+    const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === "Enter") {
             handleSearch();
         }
@@ -37,7 +37,7 @@ export function Search({ onSearch }: SearchProps) {
                         placeholder={`Search by ${activeFilter}...`}
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        onKeyPress={handleKeyPress}
+                        onKeyDown={handleKeyPress}
                     />
                 </div>
                 <button

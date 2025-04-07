@@ -4,7 +4,6 @@ import { useAuth } from "../../shared/components/auth/AuthContext";
 export default function Profile() {
   const auth = useAuth();
   const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string>('');
 
   useEffect(() => {
     // Simuliamo un caricamento iniziale breve
@@ -16,7 +15,7 @@ export default function Profile() {
   }, []);
 
   if (loading) return <div>Caricamento profilo...</div>;
-  if (error) return <div className="text-red-500">{error}</div>;
+  // if (error) return <div className="text-red-500">{error}</div>;
   if (!auth.isAuthenticated || !auth.user) return <div>Non autenticato</div>;
 
   return (

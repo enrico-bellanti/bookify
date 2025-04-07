@@ -1,7 +1,8 @@
 import { useReducer } from "react";
 import { useApiClient } from "../../api/api-client";
-import { AccommodationApiApiAccommodationGetRequest, AccommodationCreate, AccommodationDto, AccommodationUpdate } from "../../api/src/api";
+import { AccommodationApiApiAccommodationGetRequest, AccommodationDto, AccommodationUpdate } from "../../api/src/api";
 import { accommodationReducer, initialState } from "./accommodation.reducer";
+// import { AccommodationCreate } from "../../api/src/api/models/accommodation-create";
 
 
 export function useAccommodationService() {
@@ -32,17 +33,17 @@ export function useAccommodationService() {
 
 
 
-    async function addAccommodation(accommodationCreate: AccommodationCreate) {
-        dispatch({ type: 'pending', payload: true })
-        try {
-            const res = await AccommodationApi.apiAccommodationPost({
-                ...accommodationCreate
-            });
-            dispatch({ type: 'accommodationAddSuccess', payload: res.data })
-        } catch (e) {
-            dispatch({ type: 'error', payload: 'Accommodations not added' })
-        }
-    }
+    // async function addAccommodation(accommodationCreate: AccommodationCreate) {
+    //     dispatch({ type: 'pending', payload: true })
+    //     try {
+    //         const res = await AccommodationApi.apiAccommodationPost({
+    //             ...accommodationCreate
+    //         });
+    //         dispatch({ type: 'accommodationAddSuccess', payload: res.data })
+    //     } catch (e) {
+    //         dispatch({ type: 'error', payload: 'Accommodations not added' })
+    //     }
+    // }
 
     async function editAccommodation(id: number, accommodationUpdate: AccommodationUpdate) {
         dispatch({ type: 'pending', payload: true })
@@ -69,7 +70,7 @@ export function useAccommodationService() {
         actions: {
             getAccommodations,
             deleteAccommodation,
-            addAccommodation,
+            // addAccommodation,
             editAccommodation,
             setActiveItem,
             resetActiveItem

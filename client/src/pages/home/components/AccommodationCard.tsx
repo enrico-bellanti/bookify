@@ -1,4 +1,4 @@
-import { AccommodationDto } from "../../../open-api/src/api";
+import { AccommodationDto } from "../../../api/src/api"
 
 interface AccommodationCardProps{
     accommodation: AccommodationDto

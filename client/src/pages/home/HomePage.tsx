@@ -36,7 +36,7 @@ export function HomePage() {
                 </div>
             </div>
             <div className="max-w-screen-lg mx-auto p-10">
-                {state.loading ? (
+                {state.pending ? (
                     <div className="text-center py-10">
                         <p className="text-xl">Loading accommodations...</p>
                     </div>

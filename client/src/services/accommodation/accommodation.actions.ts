@@ -1,4 +1,5 @@
-import { AccommodationDto } from "../../open-api/src/api"
+import { AccommodationDto } from "../../api/src/api"
+
 
 export type AccommodationsGetSuccess = { type: 'accommodationsGetSuccess', payload: AccommodationDto[] }
 export type AccommodationDeleteSuccess = { type: 'accommodationDeleteSuccess', payload: number }
