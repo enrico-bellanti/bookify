@@ -34,7 +34,8 @@ namespace Bookify.Controllers
             [FromQuery] int? size = null,
             [FromQuery] string sortBy = null,
             [FromQuery] bool? isDescending = null,
-            [FromQuery] string includes = null
+            [FromQuery] string includes = null,
+            [FromQuery] string filters = null
         )
         {
             //var userUuid = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -59,11 +60,15 @@ namespace Bookify.Controllers
             //));
             //}
 
+            // Parse the filters from the query string
+            var filterQuery = QueryHelper.ParseFilters(filters);
+
             return Ok(await _accommodationService.GetPagedAccommodationsAsync(
                 page ?? 0,
                 size ?? 25,
                 sortBy ?? "Id",
                 isDescending ?? false,
+                filterQuery,
                 QueryHelper.ParseIncludes(includes)
             ));
         }

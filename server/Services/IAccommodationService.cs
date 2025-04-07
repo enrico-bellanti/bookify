@@ -11,6 +11,7 @@ namespace Bookify.Services
             int size = 25,
             string sortBy = "Id",
             bool isDescending = false,
+            FilterQuery filterQuery = null,
             params string[] includes);
         Task<AccommodationDto> GetAccommodationByIdAsync(
             int id,

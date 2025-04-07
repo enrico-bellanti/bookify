@@ -1,7 +1,9 @@
-﻿using Bookify.Data;
+﻿using System.Linq.Expressions;
+using Bookify.Data;
 using Bookify.Data.Pagination;
 using Bookify.Dtos.Accommodation;
 using Bookify.Entities;
+using Bookify.Extensions;
 using Bookify.Repositories;
 using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
@@ -30,6 +32,7 @@ namespace Bookify.Services
             int size = 25,
             string sortBy = "Id",
             bool isDescending = false,
+            FilterQuery filterQuery = null,
             params string[] includes)
         {
             var accommodationsResult = await GetAllAccommodations(
@@ -37,6 +40,7 @@ namespace Bookify.Services
                 size,
                 sortBy,
                 isDescending,
+                filterQuery,
                 includes
             );
 
@@ -59,6 +63,7 @@ namespace Bookify.Services
             int size = 25,
             string sortBy = "Id",
             bool isDescending = false,
+            FilterQuery filterQuery = null,
             params string[] includes)
         {
             var sortDirection = isDescending ? SortDirection.DESC : SortDirection.ASC;
@@ -84,10 +89,17 @@ namespace Bookify.Services
             //    );
             //}
 
+            // Build dynamic filter expression if filter query exists
+            Expression<Func<Accommodation, bool>> filter = null;
+            if (filterQuery != null && filterQuery.Filters.Any())
+            {
+                filter = filterQuery.BuildFilterExpression<Accommodation>();
+            }
+
             // Using the new repository method with includes instead of the specific GetAllWithAddressAsync
             return await _accommodationRepository.GetAllAsync(
                 pageRequest,
-                filter: null,
+                filter: filter,
                 cancellationToken: default,
                 includeProperties: includes
             );
