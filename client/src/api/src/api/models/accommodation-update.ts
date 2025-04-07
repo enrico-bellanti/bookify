@@ -31,13 +31,13 @@ export interface AccommodationUpdate {
      * @type {string}
      * @memberof AccommodationUpdate
      */
-    'name': string | null;
+    'name'?: string | null;
     /**
      * 
      * @type {AccommodationType}
      * @memberof AccommodationUpdate
      */
-    'type': AccommodationType;
+    'type'?: AccommodationType;
     /**
      * 
      * @type {File}
@@ -46,16 +46,10 @@ export interface AccommodationUpdate {
     'imgFile'?: File | null;
     /**
      * 
-     * @type {number}
-     * @memberof AccommodationUpdate
-     */
-    'ownerId'?: number;
-    /**
-     * 
      * @type {AddressDto}
      * @memberof AccommodationUpdate
      */
-    'address': AddressDto;
+    'address'?: AddressDto;
 }
 
 

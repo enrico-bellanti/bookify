@@ -48,6 +48,13 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "filters",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -104,10 +111,6 @@
                     "type": "string",
                     "format": "binary"
                   },
-                  "OwnerId": {
-                    "type": "integer",
-                    "format": "int32"
-                  },
                   "Address.Street": {
                     "type": "string"
                   },
@@ -147,9 +150,6 @@
                   "style": "form"
                 },
                 "ImgFile": {
-                  "style": "form"
-                },
-                "OwnerId": {
                   "style": "form"
                 },
                 "Address.Street": {
@@ -959,11 +959,6 @@
         "type": "string"
       },
       "AccommodationUpdate": {
-        "required": [
-          "address",
-          "name",
-          "type"
-        ],
         "type": "object",
         "properties": {
           "name": {
@@ -977,10 +972,6 @@
             "type": "string",
             "format": "binary",
             "nullable": true
-          },
-          "ownerId": {
-            "type": "integer",
-            "format": "int32"
           },
           "address": {
             "$ref": "#/components/schemas/AddressDto"

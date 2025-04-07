@@ -42,10 +42,11 @@ export const AccommodationApiAxiosParamCreator = function (configuration?: Confi
          * @param {string} [sortBy] 
          * @param {boolean} [isDescending] 
          * @param {string} [includes] 
+         * @param {string} [filters] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiAccommodationGet: async (page?: number, size?: number, sortBy?: string, isDescending?: boolean, includes?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        apiAccommodationGet: async (page?: number, size?: number, sortBy?: string, isDescending?: boolean, includes?: string, filters?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/Accommodation`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -84,6 +85,10 @@ export const AccommodationApiAxiosParamCreator = function (configuration?: Confi
 
             if (includes !== undefined) {
                 localVarQueryParameter['includes'] = includes;
+            }
+
+            if (filters !== undefined) {
+                localVarQueryParameter['filters'] = filters;
             }
 
 
@@ -240,14 +245,13 @@ export const AccommodationApiAxiosParamCreator = function (configuration?: Confi
          * @param {string} addressProvince 
          * @param {string} addressPostalCode 
          * @param {string} addressCountry 
-         * @param {number} [ownerId] 
          * @param {string} [addressAdditionalInfo] 
          * @param {number} [addressLatitude] 
          * @param {number} [addressLongitude] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiAccommodationPost: async (name: string, type: AccommodationType, imgFile: File, addressStreet: string, addressNumber: string, addressCity: string, addressProvince: string, addressPostalCode: string, addressCountry: string, ownerId?: number, addressAdditionalInfo?: string, addressLatitude?: number, addressLongitude?: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        apiAccommodationPost: async (name: string, type: AccommodationType, imgFile: File, addressStreet: string, addressNumber: string, addressCity: string, addressProvince: string, addressPostalCode: string, addressCountry: string, addressAdditionalInfo?: string, addressLatitude?: number, addressLongitude?: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'name' is not null or undefined
             assertParamExists('apiAccommodationPost', 'name', name)
             // verify required parameter 'type' is not null or undefined
@@ -298,10 +302,6 @@ export const AccommodationApiAxiosParamCreator = function (configuration?: Confi
     
             if (imgFile !== undefined) { 
                 localVarFormParams.append('ImgFile', imgFile as any);
-            }
-    
-            if (ownerId !== undefined) { 
-                localVarFormParams.append('OwnerId', ownerId as any);
             }
     
             if (addressStreet !== undefined) { 
@@ -370,11 +370,12 @@ export const AccommodationApiFp = function(configuration?: Configuration) {
          * @param {string} [sortBy] 
          * @param {boolean} [isDescending] 
          * @param {string} [includes] 
+         * @param {string} [filters] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiAccommodationGet(page?: number, size?: number, sortBy?: string, isDescending?: boolean, includes?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AccommodationDtoPagedResult>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiAccommodationGet(page, size, sortBy, isDescending, includes, options);
+        async apiAccommodationGet(page?: number, size?: number, sortBy?: string, isDescending?: boolean, includes?: string, filters?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AccommodationDtoPagedResult>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiAccommodationGet(page, size, sortBy, isDescending, includes, filters, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['AccommodationApi.apiAccommodationGet']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -428,15 +429,14 @@ export const AccommodationApiFp = function(configuration?: Configuration) {
          * @param {string} addressProvince 
          * @param {string} addressPostalCode 
          * @param {string} addressCountry 
-         * @param {number} [ownerId] 
          * @param {string} [addressAdditionalInfo] 
          * @param {number} [addressLatitude] 
          * @param {number} [addressLongitude] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiAccommodationPost(name: string, type: AccommodationType, imgFile: File, addressStreet: string, addressNumber: string, addressCity: string, addressProvince: string, addressPostalCode: string, addressCountry: string, ownerId?: number, addressAdditionalInfo?: string, addressLatitude?: number, addressLongitude?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AccommodationDto>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiAccommodationPost(name, type, imgFile, addressStreet, addressNumber, addressCity, addressProvince, addressPostalCode, addressCountry, ownerId, addressAdditionalInfo, addressLatitude, addressLongitude, options);
+        async apiAccommodationPost(name: string, type: AccommodationType, imgFile: File, addressStreet: string, addressNumber: string, addressCity: string, addressProvince: string, addressPostalCode: string, addressCountry: string, addressAdditionalInfo?: string, addressLatitude?: number, addressLongitude?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AccommodationDto>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiAccommodationPost(name, type, imgFile, addressStreet, addressNumber, addressCity, addressProvince, addressPostalCode, addressCountry, addressAdditionalInfo, addressLatitude, addressLongitude, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['AccommodationApi.apiAccommodationPost']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -458,7 +458,7 @@ export const AccommodationApiFactory = function (configuration?: Configuration, 
          * @throws {RequiredError}
          */
         apiAccommodationGet(requestParameters: AccommodationApiApiAccommodationGetRequest = {}, options?: RawAxiosRequestConfig): AxiosPromise<AccommodationDtoPagedResult> {
-            return localVarFp.apiAccommodationGet(requestParameters.page, requestParameters.size, requestParameters.sortBy, requestParameters.isDescending, requestParameters.includes, options).then((request) => request(axios, basePath));
+            return localVarFp.apiAccommodationGet(requestParameters.page, requestParameters.size, requestParameters.sortBy, requestParameters.isDescending, requestParameters.includes, requestParameters.filters, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -494,7 +494,7 @@ export const AccommodationApiFactory = function (configuration?: Configuration, 
          * @throws {RequiredError}
          */
         apiAccommodationPost(requestParameters: AccommodationApiApiAccommodationPostRequest, options?: RawAxiosRequestConfig): AxiosPromise<AccommodationDto> {
-            return localVarFp.apiAccommodationPost(requestParameters.name, requestParameters.type, requestParameters.imgFile, requestParameters.addressStreet, requestParameters.addressNumber, requestParameters.addressCity, requestParameters.addressProvince, requestParameters.addressPostalCode, requestParameters.addressCountry, requestParameters.ownerId, requestParameters.addressAdditionalInfo, requestParameters.addressLatitude, requestParameters.addressLongitude, options).then((request) => request(axios, basePath));
+            return localVarFp.apiAccommodationPost(requestParameters.name, requestParameters.type, requestParameters.imgFile, requestParameters.addressStreet, requestParameters.addressNumber, requestParameters.addressCity, requestParameters.addressProvince, requestParameters.addressPostalCode, requestParameters.addressCountry, requestParameters.addressAdditionalInfo, requestParameters.addressLatitude, requestParameters.addressLongitude, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -592,6 +592,13 @@ export interface AccommodationApiApiAccommodationGetRequest {
      * @memberof AccommodationApiApiAccommodationGet
      */
     readonly includes?: string
+
+    /**
+     * 
+     * @type {string}
+     * @memberof AccommodationApiApiAccommodationGet
+     */
+    readonly filters?: string
 }
 
 /**
@@ -721,13 +728,6 @@ export interface AccommodationApiApiAccommodationPostRequest {
 
     /**
      * 
-     * @type {number}
-     * @memberof AccommodationApiApiAccommodationPost
-     */
-    readonly ownerId?: number
-
-    /**
-     * 
      * @type {string}
      * @memberof AccommodationApiApiAccommodationPost
      */
@@ -763,7 +763,7 @@ export class AccommodationApi extends BaseAPI implements AccommodationApiInterfa
      * @memberof AccommodationApi
      */
     public apiAccommodationGet(requestParameters: AccommodationApiApiAccommodationGetRequest = {}, options?: RawAxiosRequestConfig) {
-        return AccommodationApiFp(this.configuration).apiAccommodationGet(requestParameters.page, requestParameters.size, requestParameters.sortBy, requestParameters.isDescending, requestParameters.includes, options).then((request) => request(this.axios, this.basePath));
+        return AccommodationApiFp(this.configuration).apiAccommodationGet(requestParameters.page, requestParameters.size, requestParameters.sortBy, requestParameters.isDescending, requestParameters.includes, requestParameters.filters, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -807,7 +807,7 @@ export class AccommodationApi extends BaseAPI implements AccommodationApiInterfa
      * @memberof AccommodationApi
      */
     public apiAccommodationPost(requestParameters: AccommodationApiApiAccommodationPostRequest, options?: RawAxiosRequestConfig) {
-        return AccommodationApiFp(this.configuration).apiAccommodationPost(requestParameters.name, requestParameters.type, requestParameters.imgFile, requestParameters.addressStreet, requestParameters.addressNumber, requestParameters.addressCity, requestParameters.addressProvince, requestParameters.addressPostalCode, requestParameters.addressCountry, requestParameters.ownerId, requestParameters.addressAdditionalInfo, requestParameters.addressLatitude, requestParameters.addressLongitude, options).then((request) => request(this.axios, this.basePath));
+        return AccommodationApiFp(this.configuration).apiAccommodationPost(requestParameters.name, requestParameters.type, requestParameters.imgFile, requestParameters.addressStreet, requestParameters.addressNumber, requestParameters.addressCity, requestParameters.addressProvince, requestParameters.addressPostalCode, requestParameters.addressCountry, requestParameters.addressAdditionalInfo, requestParameters.addressLatitude, requestParameters.addressLongitude, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

@@ -1,6 +1,6 @@
 import { useReducer } from "react";
 import { useApiClient } from "../../api/api-client";
-import { AccommodationCreate, AccommodationDto, AccommodationUpdate } from "../../api/src/api";
+import { AccommodationApiApiAccommodationGetRequest, AccommodationCreate, AccommodationDto, AccommodationUpdate } from "../../api/src/api";
 import { accommodationReducer, initialState } from "./accommodation.reducer";
 
 
@@ -8,12 +8,10 @@ export function useAccommodationService() {
     const AccommodationApi = useApiClient().accommodation;
     const [state, dispatch] = useReducer(accommodationReducer, initialState);
 
-    async function getAccommodations() {
+    async function getAccommodations(requestParameters: AccommodationApiApiAccommodationGetRequest = {}) {
         dispatch({ type: 'pending', payload: true });
         try {
-            const res = await AccommodationApi.apiAccommodationGet({
-                includes: 'Address'
-            });
+            const res = await AccommodationApi.apiAccommodationGet(requestParameters);
             dispatch({ type: 'accommodationsGetSuccess', payload: res.data.items || [] })
         } catch (e) {
             dispatch({ type: 'error', payload: 'Accommodations not loaded' })
