@@ -31,7 +31,7 @@ secrets.json
 # Database and migrations
 *.mdf
 *.ldf
-Migrations/
+# Migrations/
 
 # ASP.NET temporary files
 *.pidb
