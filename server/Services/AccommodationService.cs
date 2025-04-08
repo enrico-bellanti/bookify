@@ -70,6 +70,7 @@ namespace Bookify.Services
             var sort = Sort.By(sortDirection, sortBy);
             var pageRequest = PageRequest.Of(page, size, sort);
 
+
             //if (userUuid != null)
             //{
             //    // Parse the string UUID to a valid GUID
