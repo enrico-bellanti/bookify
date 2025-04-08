@@ -215,7 +215,6 @@ builder.Services.AddSingleton<Cloudinary>(sp => {
 var app = builder.Build();
 
 // Apply migrations at startup
-// Apply migrations at startup
 if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
 {
     using (var scope = app.Services.CreateScope())
@@ -223,25 +222,12 @@ if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
         try
         {
             var dbContext = scope.ServiceProvider.GetRequiredService<BookifyDbContext>();
-
-            // One-time database reset approach
-            Console.WriteLine("Attempting to reset database...");
-
-            // Drop existing database
-            dbContext.Database.EnsureDeleted();
-
-            // Create new database with all migrations applied
-            dbContext.Database.EnsureCreated();
-
-            Console.WriteLine("Database reset successfully");
+            dbContext.Database.Migrate();
+            Console.WriteLine("Migrations applied successfully");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error resetting database: {ex.Message}");
-            if (ex.InnerException != null)
-            {
-                Console.WriteLine($"Inner exception: {ex.InnerException.Message}");
-            }
+            Console.WriteLine($"Error applying migrations: {ex.Message}");
         }
     }
 }
