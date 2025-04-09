@@ -14,6 +14,20 @@
     "moduleDetection": "force",
     "noEmit": true,
     "jsx": "react-jsx",
+    "paths": {
+      "@/shared/*": [
+        "./src/shared/index"
+      ],
+      "@/services/*": [
+        "./src/services/index"
+      ],
+      "@/pages/*": [
+        "./src/pages/index"
+      ],
+      "@/model/*": [
+        "./src/model/index"
+      ],
+    },
 
     /* Linting */
     "strict": true,

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../../shared/components/auth/AuthContext";
 
-export default function Profile() {
+export function ProfilePage() {
   const auth = useAuth();
   const [loading, setLoading] = useState<boolean>(true);
 

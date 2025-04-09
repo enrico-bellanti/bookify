@@ -1,57 +1,86 @@
 import { AccommodationDto } from "../../api/src/api";
+import {
+    ACCOMMODATIONS_GET_SUCCESS,
+    ACCOMMODATION_ADD_SUCCESS,
+    ACCOMMODATION_DELETE_SUCCESS,
+    ACCOMMODATION_EDIT_SUCCESS,
+    ACCOMMODATION_SET_ACTIVE,
+    ERROR,
+    PENDING
+} from "./accommodation-action-types";
 import { AccommodationActions } from "./accommodation.actions";
 
-export interface AccomodationState {
+export interface AccommodationState {
     accommodations: AccommodationDto[];
-    pending: boolean;
-    error: string | null
-    activeItem: Partial<AccommodationDto> | null
+    activeAccommodation: Partial<AccommodationDto> | null;
+    loading: boolean;
+    error: string | null;
 }
-export const initialState: AccomodationState = {
+
+export const initialState: AccommodationState = {
     accommodations: [],
-    pending: false,
-    error: null,
-    activeItem: null
+    activeAccommodation: null,
+    loading: false,
+    error: null
 };
 
-export function accommodationReducer(state: AccomodationState, action: AccommodationActions) {
-    const { type, payload } = action;
+export function accommodationReducer(state: AccommodationState, action: AccommodationActions): AccommodationState {
+    switch (action.type) {
+        case ACCOMMODATIONS_GET_SUCCESS:
+            return {
+                ...state,
+                accommodations: action.payload,
+                loading: false,
+                error: null
+            };
 
-    switch (type) {
-        case 'accommodationsGetSuccess':
-            return { ...state, accommodations: payload, pending: false, error: null }
-        case 'accommodationDeleteSuccess':
+        case ACCOMMODATION_DELETE_SUCCESS:
             return {
                 ...state,
-                accommodations: state.accommodations.filter(item => item.id !== payload),
-                error: null,
-                pending: false,
-                activeItem: null,
+                accommodations: state.accommodations.filter(accommodation => accommodation.id !== action.payload),
+                loading: false,
+                error: null
             };
-        case 'accommodationAddSuccess':
+
+        case ACCOMMODATION_ADD_SUCCESS:
             return {
                 ...state,
-                accommodations: [...state.accommodations, payload],
-                activeItem: null,
-                error: null,
-                pending: false
+                accommodations: [...state.accommodations, action.payload],
+                loading: false,
+                error: null
             };
-        case 'accommodationEditSuccess':
+
+        case ACCOMMODATION_EDIT_SUCCESS:
             return {
                 ...state,
-                accommodations: state.accommodations.map(item => item.id === payload.id ? payload : item),
-                activeItem: null,
-                error: null,
-                pending: false,
+                accommodations: state.accommodations.map(accommodation =>
+                    accommodation.id === action.payload.id ? action.payload : accommodation
+                ),
+                loading: false,
+                error: null
             };
-        case 'accommodationSetActive':
-            return { ...state, activeItem: payload }
-        case 'pending':
-            return { ...state, pending: payload, error: null };
-        case 'error':
-            return { ...state, error: payload, pending: false }
+
+        case ACCOMMODATION_SET_ACTIVE:
+            return {
+                ...state,
+                activeAccommodation: action.payload
+            };
+
+        case ERROR:
+            return {
+                ...state,
+                loading: false,
+                error: action.payload
+            };
+
+        case PENDING:
+            return {
+                ...state,
+                loading: action.payload,
+                error: null
+            };
+
         default:
             return state;
     }
 }
-

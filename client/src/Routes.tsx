@@ -1,6 +1,6 @@
 import { Navigate, useRoutes } from "react-router-dom";
-import HomePage from "./pages/home/HomePage";
-import Profile from "./pages/profile/Profile";
+import { HomePage, ProfilePage } from "./pages";
+import { ProtectedRoute } from "./shared/components/auth/ProtectedRoute";
 
 export function ShopRoutes(){
     return  useRoutes([
@@ -14,7 +14,7 @@ export function ShopRoutes(){
         // },
         {
             path: '/profile',
-            element: <Profile></Profile>
+            element: <ProtectedRoute><ProfilePage></ProfilePage></ProtectedRoute>
         },
         {
             path: '*',

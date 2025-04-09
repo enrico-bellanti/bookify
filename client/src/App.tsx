@@ -1,8 +1,8 @@
 // App.tsx
-import { BrowserRouter } from "react-router-dom"
-import { ShopRoutes } from './Routes'
-import { CustomAuthProvider } from './shared/components/auth/AuthContext'
-import { NavBar } from './shared/components/core/NavBar'
+import { CustomAuthProvider, NavBar } from "@/shared/";
+import { BrowserRouter } from "react-router-dom";
+import { ShopRoutes } from './Routes';
+
 
 function App() {
   return (

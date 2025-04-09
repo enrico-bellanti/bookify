@@ -1333,8 +1333,8 @@
         "type": "oauth2",
         "flows": {
           "password": {
-            "authorizationUrl": "https://keycloak-production-b4d5.up.railway.app/realms/bookify/protocol/openid-connect/auth",
-            "tokenUrl": "https://keycloak-production-b4d5.up.railway.app/realms/bookify/protocol/openid-connect/token",
+            "authorizationUrl": "http://localhost:8080/realms/bookify/protocol/openid-connect/auth",
+            "tokenUrl": "http://localhost:8080/realms/bookify/protocol/openid-connect/token",
             "scopes": {
               "openid": "OpenID Connect scope",
               "profile": "Profile information",
@@ -1342,8 +1342,8 @@
             }
           },
           "authorizationCode": {
-            "authorizationUrl": "https://keycloak-production-b4d5.up.railway.app/realms/bookify/protocol/openid-connect/auth",
-            "tokenUrl": "https://keycloak-production-b4d5.up.railway.app/realms/bookify/protocol/openid-connect/token",
+            "authorizationUrl": "http://localhost:8080/realms/bookify/protocol/openid-connect/auth",
+            "tokenUrl": "http://localhost:8080/realms/bookify/protocol/openid-connect/token",
             "scopes": {
               "openid": "OpenID Connect scope",
               "profile": "Profile information",

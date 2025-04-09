@@ -1,0 +1,36 @@
+/* Add these styles to your CSS file */
+
+/* Base search wrapper styles */
+.search-wrapper {
+    width: 100%;
+    transition: all 0.3s ease-in-out;
+  }
+  
+  /* When search wrapper becomes fixed */
+  .fixed-search {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Search container positioning */
+  .search-container {
+    position: relative;
+    top: 0;
+    transform: translateY(-50%);
+  }
+  
+  /* Search component styling */
+  .search-container .search {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    background-color: white;
+  }
+  
+  /* Hero banner margin */
+  .jumbotron {
+    margin-bottom: 24px;
+  }
+  
+  /* Ensure navbar stays on top */
+  .navbar {
+    z-index: 20;
+  }

@@ -1,14 +1,21 @@
-import { AccommodationDto } from "../../api/src/api"
+import { AccommodationDto } from "../../api/src/api";
+import {
+    ACCOMMODATIONS_GET_SUCCESS,
+    ACCOMMODATION_ADD_SUCCESS,
+    ACCOMMODATION_DELETE_SUCCESS,
+    ACCOMMODATION_EDIT_SUCCESS,
+    ACCOMMODATION_SET_ACTIVE,
+    ERROR,
+    PENDING
+} from "./accommodation-action-types";
 
-
-export type AccommodationsGetSuccess = { type: 'accommodationsGetSuccess', payload: AccommodationDto[] }
-export type AccommodationDeleteSuccess = { type: 'accommodationDeleteSuccess', payload: number }
-export type AccommodationAddSuccess = { type: 'accommodationAddSuccess', payload: AccommodationDto }
-export type AccommodationEditSuccess = { type: 'accommodationEditSuccess', payload: AccommodationDto }
-export type AccommodationSetActive = { type: 'accommodationSetActive', payload: Partial<AccommodationDto> | null }
-export type Error = { type: 'error', payload: string }
-export type Pending = { type: 'pending', payload: boolean }
-
+export type AccommodationsGetSuccess = { type: typeof ACCOMMODATIONS_GET_SUCCESS, payload: AccommodationDto[] }
+export type AccommodationDeleteSuccess = { type: typeof ACCOMMODATION_DELETE_SUCCESS, payload: number }
+export type AccommodationAddSuccess = { type: typeof ACCOMMODATION_ADD_SUCCESS, payload: AccommodationDto }
+export type AccommodationEditSuccess = { type: typeof ACCOMMODATION_EDIT_SUCCESS, payload: AccommodationDto }
+export type AccommodationSetActive = { type: typeof ACCOMMODATION_SET_ACTIVE, payload: Partial<AccommodationDto> | null }
+export type Error = { type: typeof ERROR, payload: string }
+export type Pending = { type: typeof PENDING, payload: boolean }
 
 export type AccommodationActions =
     AccommodationsGetSuccess |

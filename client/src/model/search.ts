@@ -1,9 +1,6 @@
 // Define the search parameters interface
 export interface SearchParams {
-    city?: string;
-    priceMin?: string | number;
-    priceMax?: string | number;
-    [key: string]: string | number | undefined; // Allow for additional dynamic filter types
+    filters?: string;
 }
 
 // Define the search component props

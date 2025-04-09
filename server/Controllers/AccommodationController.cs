@@ -151,6 +151,7 @@ namespace Bookify.Controllers
 
         [HttpPut("{id}")]
         [Authorize]
+        [Consumes("multipart/form-data")]
         public async Task<ActionResult<AccommodationDto>> Put(int id, [FromBody] AccommodationUpdate accommodationUpdate)
         {
             var userUuid = User.FindFirstValue(ClaimTypes.NameIdentifier);
