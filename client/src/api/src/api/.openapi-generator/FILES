@@ -14,7 +14,6 @@ index.ts
 models/accommodation-dto-paged-result.ts
 models/accommodation-dto.ts
 models/accommodation-type.ts
-models/accommodation-update.ts
 models/accommodation.ts
 models/add-user-request-dto.ts
 models/address-dto.ts

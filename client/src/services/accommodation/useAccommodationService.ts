@@ -1,6 +1,6 @@
 import { useReducer } from "react";
 import { useApiClient } from "../../api/api-client";
-import { AccommodationApiApiAccommodationGetRequest, AccommodationApiApiAccommodationPostRequest, AccommodationDto, AccommodationUpdate } from "../../api/src/api";
+import { AccommodationApiApiAccommodationGetRequest, AccommodationApiApiAccommodationIdPutRequest, AccommodationApiApiAccommodationPostRequest, AccommodationDto } from "../../api/src/api";
 import {
     ACCOMMODATIONS_GET_SUCCESS,
     ACCOMMODATION_ADD_SUCCESS,
@@ -43,22 +43,17 @@ export function useAccommodationService() {
     async function addAccommodation(accommodationCreate: AccommodationApiApiAccommodationPostRequest) {
         dispatch({ type: PENDING, payload: true })
         try {
-            const res = await AccommodationApi.apiAccommodationPost({
-                ...accommodationCreate
-            });
+            const res = await AccommodationApi.apiAccommodationPost(accommodationCreate);
             dispatch({ type: ACCOMMODATION_ADD_SUCCESS, payload: res.data })
         } catch (e) {
             dispatch({ type: ERROR, payload: 'Accommodations not added' })
         }
     }
 
-    async function editAccommodation(id: number, accommodationUpdate: AccommodationUpdate) {
+    async function editAccommodation(accommodationUpdate: AccommodationApiApiAccommodationIdPutRequest) {
         dispatch({ type: PENDING, payload: true })
         try {
-            const res = await AccommodationApi.apiAccommodationIdPut({
-                id,
-                accommodationUpdate
-            });
+            const res = await AccommodationApi.apiAccommodationIdPut(accommodationUpdate);
             dispatch({ type: ACCOMMODATION_EDIT_SUCCESS, payload: res.data })
         } catch (e) {
             dispatch({ type: ERROR, payload: 'Accommodations not edited' })

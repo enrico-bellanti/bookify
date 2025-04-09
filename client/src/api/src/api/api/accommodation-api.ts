@@ -28,7 +28,7 @@ import type { AccommodationDtoPagedResult } from '../models';
 // @ts-ignore
 import type { AccommodationType } from '../models';
 // @ts-ignore
-import type { AccommodationUpdate } from '../models';
+import type { AddressDto } from '../models';
 /**
  * AccommodationApi - axios parameter creator
  * @export
@@ -192,11 +192,14 @@ export const AccommodationApiAxiosParamCreator = function (configuration?: Confi
         /**
          * 
          * @param {number} id 
-         * @param {AccommodationUpdate} [accommodationUpdate] 
+         * @param {string | null} [name] 
+         * @param {AccommodationType} [type] 
+         * @param {File | null} [imgFile] 
+         * @param {AddressDto} [address] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiAccommodationIdPut: async (id: number, accommodationUpdate?: AccommodationUpdate, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        apiAccommodationIdPut: async (id: number, name?: string | null, type?: AccommodationType, imgFile?: File | null, address?: AddressDto, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('apiAccommodationIdPut', 'id', id)
             const localVarPath = `/api/Accommodation/{id}`
@@ -211,6 +214,7 @@ export const AccommodationApiAxiosParamCreator = function (configuration?: Confi
             const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
+            const localVarFormParams = new ((configuration && configuration.formDataCtor) || FormData)();
 
             // authentication oauth2 required
             // oauth required
@@ -221,13 +225,29 @@ export const AccommodationApiAxiosParamCreator = function (configuration?: Confi
             await setOAuthToObject(localVarHeaderParameter, "oauth2", ["openid", "profile", "email"], configuration)
 
 
+            if (name !== undefined) { 
+                localVarFormParams.append('name', name as any);
+            }
     
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
+            if (type !== undefined) { 
+                localVarFormParams.append('type', type as any);
+            }
+    
+            if (imgFile !== undefined) { 
+                localVarFormParams.append('imgFile', imgFile as any);
+            }
+    
+            if (address !== undefined) { 
+                localVarFormParams.append('address', new Blob([JSON.stringify(address)], { type: "application/json", }));
+            }
+    
+    
+            localVarHeaderParameter['Content-Type'] = 'multipart/form-data';
+    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(accommodationUpdate, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = localVarFormParams;
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -408,12 +428,15 @@ export const AccommodationApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @param {number} id 
-         * @param {AccommodationUpdate} [accommodationUpdate] 
+         * @param {string | null} [name] 
+         * @param {AccommodationType} [type] 
+         * @param {File | null} [imgFile] 
+         * @param {AddressDto} [address] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiAccommodationIdPut(id: number, accommodationUpdate?: AccommodationUpdate, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AccommodationDto>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiAccommodationIdPut(id, accommodationUpdate, options);
+        async apiAccommodationIdPut(id: number, name?: string | null, type?: AccommodationType, imgFile?: File | null, address?: AddressDto, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AccommodationDto>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiAccommodationIdPut(id, name, type, imgFile, address, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['AccommodationApi.apiAccommodationIdPut']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -485,7 +508,7 @@ export const AccommodationApiFactory = function (configuration?: Configuration, 
          * @throws {RequiredError}
          */
         apiAccommodationIdPut(requestParameters: AccommodationApiApiAccommodationIdPutRequest, options?: RawAxiosRequestConfig): AxiosPromise<AccommodationDto> {
-            return localVarFp.apiAccommodationIdPut(requestParameters.id, requestParameters.accommodationUpdate, options).then((request) => request(axios, basePath));
+            return localVarFp.apiAccommodationIdPut(requestParameters.id, requestParameters.name, requestParameters.type, requestParameters.imgFile, requestParameters.address, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -651,10 +674,31 @@ export interface AccommodationApiApiAccommodationIdPutRequest {
 
     /**
      * 
-     * @type {AccommodationUpdate}
+     * @type {string}
      * @memberof AccommodationApiApiAccommodationIdPut
      */
-    readonly accommodationUpdate?: AccommodationUpdate
+    readonly name?: string | null
+
+    /**
+     * 
+     * @type {AccommodationType}
+     * @memberof AccommodationApiApiAccommodationIdPut
+     */
+    readonly type?: AccommodationType
+
+    /**
+     * 
+     * @type {File}
+     * @memberof AccommodationApiApiAccommodationIdPut
+     */
+    readonly imgFile?: File | null
+
+    /**
+     * 
+     * @type {AddressDto}
+     * @memberof AccommodationApiApiAccommodationIdPut
+     */
+    readonly address?: AddressDto
 }
 
 /**
@@ -796,7 +840,7 @@ export class AccommodationApi extends BaseAPI implements AccommodationApiInterfa
      * @memberof AccommodationApi
      */
     public apiAccommodationIdPut(requestParameters: AccommodationApiApiAccommodationIdPutRequest, options?: RawAxiosRequestConfig) {
-        return AccommodationApiFp(this.configuration).apiAccommodationIdPut(requestParameters.id, requestParameters.accommodationUpdate, options).then((request) => request(this.axios, this.basePath));
+        return AccommodationApiFp(this.configuration).apiAccommodationIdPut(requestParameters.id, requestParameters.name, requestParameters.type, requestParameters.imgFile, requestParameters.address, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

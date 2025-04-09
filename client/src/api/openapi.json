@@ -270,17 +270,7 @@
         ],
         "requestBody": {
           "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AccommodationUpdate"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AccommodationUpdate"
-              }
-            },
-            "application/*+json": {
+            "multipart/form-data": {
               "schema": {
                 "$ref": "#/components/schemas/AccommodationUpdate"
               }

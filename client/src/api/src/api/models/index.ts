@@ -2,7 +2,6 @@ export * from './accommodation';
 export * from './accommodation-dto';
 export * from './accommodation-dto-paged-result';
 export * from './accommodation-type';
-export * from './accommodation-update';
 export * from './add-user-request-dto';
 export * from './address';
 export * from './address-dto';
