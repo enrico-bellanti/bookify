@@ -1,3 +1,4 @@
+import { SearchProps } from "@/model/";
 import { useState } from "react";
 import { AccommodationType } from "../../../api/src/api";
 

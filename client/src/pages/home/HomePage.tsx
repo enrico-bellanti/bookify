@@ -94,7 +94,7 @@ export function HomePage() {
                 
                 {/* Content Container */}
                 <div className="max-w-screen-lg mx-auto p-10">
-                    {state.pending ? (
+                    {state.loading ? (
                         <div className="text-center py-10">
                             <p className="text-xl">Loading accommodations...</p>
                         </div>
