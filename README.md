@@ -4,7 +4,7 @@ Bookify è uno scaffolding iniziale per un progetto scalabile di un'agenzia di v
 
 Questo progetto utilizza una struttura ben organizzata che separa il frontend (`client`), il backend (`server`) e le dipendenze locali (`local_deps`), facilitando lo sviluppo e il deployment in ambienti diversi.
 
-![Bookify](https://bookify-bay-tau.vercel.app/assets/logo-96baa84f.svg)
+![Bookify](https://bookify-bay-tau.vercel.app/assets/bookify_logo-BrO1lyb6.png)
 
 ## Demo Live
 
