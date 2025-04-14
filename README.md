@@ -1,122 +1,122 @@
 # Bookify - Online Travel Agency
 
-Bookify è uno scaffolding iniziale per un progetto scalabile di un'agenzia di viaggi online (OTA) focalizzata sulla prenotazione di alloggi. Il progetto è strutturato come un'applicazione distribuita moderna con un backend in .NET Core 8, autenticazione tramite Keycloak, database PostgreSQL, un proxy Nginx per la gestione delle richieste e un frontend in React.
+Bookify is an initial scaffolding for a scalable online travel agency (OTA) project focused on accommodation bookings. The project is structured as a modern distributed application with a .NET Core 8 backend, Keycloak authentication, PostgreSQL database, Nginx proxy for request management, and a React frontend.
 
-Questo progetto utilizza una struttura ben organizzata che separa il frontend (`client`), il backend (`server`) e le dipendenze locali (`local_deps`), facilitando lo sviluppo e il deployment in ambienti diversi.
+This project uses a well-organized structure that separates the frontend (`client`), backend (`server`), and local dependencies (`local_deps`), facilitating development and deployment in different environments.
 
 ![Bookify](https://bookify-bay-tau.vercel.app/assets/bookify_logo-BrO1lyb6.png)
 
-## Demo Live
+## Live Demo
 
-È possibile vedere una demo live del progetto al seguente indirizzo:
+You can see a live demo of the project at the following address:
 [https://bookify-bay-tau.vercel.app/](https://bookify-bay-tau.vercel.app/)
 
-## Architettura del Sistema
+## System Architecture
 
 ### Backend
 
-Il backend è composto da diversi servizi containerizzati:
+The backend consists of several containerized services:
 
-- **API .NET Core 8**: Servizio principale che espone le API RESTful
-- **Keycloak**: Sistema di gestione delle identità e degli accessi
-- **PostgreSQL**: Database relazionale per la persistenza dei dati
-- **Nginx**: Proxy inverso per la gestione delle richieste e CORS
+- **.NET Core 8 API**: Main service exposing RESTful APIs
+- **Keycloak**: Identity and access management system
+- **PostgreSQL**: Relational database for data persistence
+- **Nginx**: Reverse proxy for request management and CORS
 
 ### Frontend
 
-- **React**: Applicazione SPA (Single Page Application) che consuma le API del backend
+- **React**: Single Page Application (SPA) consuming backend APIs
 
-### Infrastruttura
+### Infrastructure
 
-- **Backend**: Servizi ospitati su Railway tramite Dockerfile
-- **Frontend**: Applicazione ospitata su Vercel
+- **Backend**: Services hosted on Railway via Dockerfile
+- **Frontend**: Application hosted on Vercel
 
-## Struttura del Progetto
+## Project Structure
 
 ```
 .
-├── .github/               # Configurazioni GitHub
-├── client/                # Frontend React
-├── local_deps/            # Dipendenze locali per sviluppo
-│   ├── docker-compose.yml # Configurazione Docker Compose
-│   ├── Dockerfile.nginx   # Dockerfile per Nginx
-│   ├── nginx/             # Configurazione Nginx
-│   │   ├── nginx.conf     # Configurazione principale
-│   │   └── default.conf   # Configurazione di routing
-│   ├── init-db/           # Script di inizializzazione database
+├── .github/               # GitHub configurations
+├── client/                # React Frontend
+├── local_deps/            # Local dependencies for development
+│   ├── docker-compose.yml # Docker Compose configuration
+│   ├── Dockerfile.nginx   # Dockerfile for Nginx
+│   ├── nginx/             # Nginx configuration
+│   │   ├── nginx.conf     # Main configuration
+│   │   └── default.conf   # Routing configuration
+│   ├── init-db/           # Database initialization scripts
 │   │   └── init-databases.sql
-│   ├── keycloak/          # Configurazione Keycloak
-│   │   └── realm-export/  # File di configurazione del realm
+│   ├── keycloak/          # Keycloak configuration
+│   │   └── realm-export/  # Realm configuration files
 │   │       └── bookify-realm.json
-│   └── README.md          # README per dipendenze locali
-├── proxy/                 # Configurazione proxy per produzione
-├── server/                # Backend .NET Core 8
+│   └── README.md          # README for local dependencies
+├── proxy/                 # Proxy configuration for production
+├── server/                # .NET Core 8 Backend
 │   ├── Bookify.csproj
 │   ├── Controllers/
 │   ├── Models/
 │   └── Dockerfile
-└── README.md              # Questo file principale
+└── README.md              # This main file
 ```
 
-## Funzionalità Principali
+## Main Features
 
-- **Autenticazione e Autorizzazione**: Gestione degli utenti tramite Keycloak
-- **API RESTful**: Endpoints per la gestione delle prenotazioni e degli alloggi
-- **Proxy Inverso**: Gestione avanzata del CORS e instradamento delle richieste
-- **UI Reattiva**: Interfaccia utente moderna e responsive in React
+- **Authentication and Authorization**: User management via Keycloak
+- **RESTful API**: Endpoints for booking and accommodation management
+- **Reverse Proxy**: Advanced CORS management and request routing
+- **Reactive UI**: Modern and responsive user interface in React
 
 ## API Documentation
 
-La documentazione Swagger per le API del backend è disponibile all'indirizzo:
+The Swagger documentation for the backend APIs is available at:
 
 [https://proxy-production-197b.up.railway.app/swagger/index.html](https://proxy-production-197b.up.railway.app/swagger/index.html)
 
-Questa documentazione interattiva permette di esplorare e testare tutti gli endpoint REST disponibili, visualizzare i modelli di dati e comprendere il funzionamento dell'API.
+This interactive documentation allows you to explore and test all available REST endpoints, view data models, and understand how the API works.
 
-## Requisiti
+## Requirements
 
-- Docker e Docker Compose
-- .NET SDK 8.0 (per sviluppo locale)
-- Node.js e npm (per sviluppo frontend)
+- Docker and Docker Compose
+- .NET SDK 8.0 (for local development)
+- Node.js and npm (for frontend development)
 
-## Setup Locale
+## Local Setup
 
-### 1. Clonare il Repository
+### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/tuousername/bookify.git
+git clone https://github.com/yourusername/bookify.git
 cd bookify
 ```
 
-### 2. Avviare i Servizi con Docker Compose
+### 2. Start Services with Docker Compose
 
 ```bash
 cd local_deps
 docker-compose up -d
 ```
 
-Questo comando avvierà:
+This command will start:
 
-- PostgreSQL sulla porta 5432
-- Keycloak sulla porta 8080
-- Nginx sulla porta 8081
+- PostgreSQL on port 5432
+- Keycloak on port 8080
+- Nginx on port 8081
 
-### 3. Accedere alla Console di Keycloak
+### 3. Access the Keycloak Console
 
 - URL: http://localhost:8080
 - Username: admin
 - Password: admin
 
-### 4. Avviare il Backend .NET Core (Sviluppo)
+### 4. Start the .NET Core Backend (Development)
 
 ```bash
 cd server
 dotnet run
 ```
 
-Il servizio API sarà disponibile su https://localhost:7276/api/
+The API service will be available at https://localhost:7276/api/
 
-### 5. Avviare il Frontend React (Sviluppo)
+### 5. Start the React Frontend (Development)
 
 ```bash
 cd client
@@ -124,11 +124,11 @@ npm install
 npm run dev
 ```
 
-Il frontend sarà disponibile su http://localhost:5173
+The frontend will be available at http://localhost:5173
 
-## Configurazione Ambiente
+## Environment Configuration
 
-### Variabili d'Ambiente per il Backend
+### Environment Variables for Backend
 
 ```
 ASPNETCORE_URLS=http://+:5000
@@ -136,41 +136,37 @@ ASPNETCORE_ENVIRONMENT=Development
 ConnectionStrings__DefaultConnection=Server=postgres;Port=5432;Database=bookify;User Id=postgres;Password=mysecretpassword;
 ```
 
-### Configurazione Nginx
+### Nginx Configuration
 
-Il proxy Nginx è configurato per:
+The Nginx proxy is configured to:
 
-- Inoltrare le richieste API al backend .NET Core
-- Gestire correttamente gli header CORS
-- Supportare WebSockets per le applicazioni in tempo reale
+- Forward API requests to the .NET Core backend
+- Properly handle CORS headers
+- Support WebSockets for real-time applications
 
-Per lo sviluppo locale, è configurato per inoltrare:
+For local development, it's configured to forward:
 
-- Le richieste API (/api/) a https://host.docker.internal:7276/api/
-- Le richieste frontend (/) a http://host.docker.internal:5173
+- API requests (/api/) to https://host.docker.internal:7276/api/
+- Frontend requests (/) to http://host.docker.internal:5173
 
 ## Deployment
 
-### Backend su Railway
+### Backend on Railway
 
-I servizi backend (API .NET Core, PostgreSQL, Keycloak, Nginx) sono ospitati su Railway tramite i rispettivi Dockerfile.
+The backend services (.NET Core API, PostgreSQL, Keycloak, Nginx) are hosted on Railway via their respective Dockerfiles.
 
-### Frontend su Vercel
+### Frontend on Vercel
 
-L'applicazione frontend React è ospitata su Vercel.
+The React frontend application is hosted on Vercel.
 
-## Rete Privata Railway
+## Railway Private Network
 
-Il progetto utilizza la rete privata di Railway per la comunicazione tra servizi, usando domini interni come `bookify.railway.internal` per una comunicazione più sicura ed efficiente.
+The project uses Railway's private network for communication between services, using internal domains like `bookify.railway.internal` for more secure and efficient communication.
 
-### Database
-
-Gli script di inizializzazione del database si trovano nella directory `local_deps/init-db/` e vengono eseguiti automaticamente durante il primo avvio del container PostgreSQL. Lo script `init-databases.sql` crea i database necessari per Keycloak e Bookify.
-
-## Licenza
+## License
 
 [MIT](https://choosealicense.com/licenses/mit/)
 
-## Contatti
+## Contacts
 
-Nome Progetto: [Bookify](https://bookify-bay-tau.vercel.app/)
+Project Name: [Bookify](https://bookify-bay-tau.vercel.app/)
